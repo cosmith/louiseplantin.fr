@@ -3,62 +3,81 @@ import React, {useRef} from "react";
 import {useSpring, useSprings, animated} from "react-spring";
 import {useGesture} from "react-use-gesture";
 import {clamp} from "lodash-es";
+
+import {randInt, intersects} from "./utils";
 import "./styles.css";
 
-const images = [
-    {
-        width: "600px",
-        height: "1000px",
-        src:
-            "https://images.pexels.com/photos/62689/pexels-photo-62689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    },
-    {
-        width: "1000px",
-        height: "500px",
-        src:
-            "https://images.pexels.com/photos/296878/pexels-photo-296878.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    },
-    {
-        width: "1000px",
-        height: "1000px",
-        src:
-            "https://images.pexels.com/photos/1509428/pexels-photo-1509428.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    },
-    {
-        width: "2000px",
-        height: "1000px",
-        src:
-            "https://images.pexels.com/photos/351265/pexels-photo-351265.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    },
-    {
-        width: "500px",
-        height: "500px",
-        src:
-            "https://images.pexels.com/photos/924675/pexels-photo-924675.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-    },
-];
+function generateImages(number) {
+    let count = 0;
+    const images = [];
+    while (count < number) {
+        count = count + 1;
+        const width = randInt(500, 2000);
+        const height = randInt(500, 2000);
 
-const GRID_SIZE = 500;
+        images.push({
+            width: width,
+            height: height,
+            src: `http://placekitten.com/${width}/${height}/`,
+            title: "Test",
+        });
+    }
+    return images;
+}
+
+const images = generateImages(20);
+
+const GRID_SIZE = 200;
 const ZOOM_SPEED = 1.2;
+const INITIAL_ZOOM = 0.2;
+const MIN_ZOOM = 0.2;
+const MAX_ZOOM = 2;
 const MOVE_SPEED = 20;
 
-function randomGridPosition() {
-    return [
-        Math.floor(Math.random() * 10) * GRID_SIZE - 5 * GRID_SIZE,
-        Math.floor(Math.random() * 10) * GRID_SIZE - 5 * GRID_SIZE,
-    ];
+function generatePositions(images) {
+    const positions = [];
+
+    images.forEach(image => {
+        let x = randInt(-50, 50) * GRID_SIZE;
+        let y = randInt(-50, 50) * GRID_SIZE;
+        let theta = 0;
+        let radius = 0;
+
+        let hasIntersection = true;
+
+        while (hasIntersection) {
+            hasIntersection = false;
+            theta += (randInt(10, 25) / 180) * Math.PI;
+            if (theta > Math.PI * 2) {
+                radius += 50;
+            }
+            x = Math.floor(Math.cos(theta) * radius);
+            y = Math.floor(Math.sin(theta) * radius);
+            for (let i = 0; i < positions.length; i++) {
+                let position = positions[i];
+                hasIntersection =
+                    hasIntersection ||
+                    intersects(image, x, y, images[i], position[0], position[1], 50);
+            }
+        }
+
+        positions.push([x, y]);
+    });
+    return positions;
 }
 
 function Viewpager() {
-    const zoomLevel = useRef(1);
+    const zoomLevel = useRef(INITIAL_ZOOM);
     const position = useRef({x: 0, y: 0});
 
     const [propsMap, setPropsMap] = useSpring(() => {
-        return {xys: [0, 0, 0.5]}; // x, y, scale
+        return {xys: [0, 0, INITIAL_ZOOM]}; // x, y, scale
     });
 
+    const initialPositions = generatePositions(images);
+
     const [propsImages, setImages] = useSprings(images.length, i => ({
-        xy: randomGridPosition(),
+        xy: initialPositions[i],
         display: "block",
     }));
 
@@ -73,8 +92,8 @@ function Viewpager() {
         onWheel: ({delta: [xDelta, yDelta]}) => {
             zoomLevel.current = clamp(
                 yDelta < 0 ? ZOOM_SPEED * zoomLevel.current : zoomLevel.current / ZOOM_SPEED,
-                0.2,
-                2
+                MIN_ZOOM,
+                MAX_ZOOM
             );
             setPropsMap({xys: [position.current.x, position.current.y, zoomLevel.current]});
         },
@@ -85,26 +104,27 @@ function Viewpager() {
             <div
                 id="shuffle"
                 className="chrome"
-                onClick={() =>
+                onClick={() => {
+                    const positions = generatePositions(images);
                     setImages(i => {
                         return {
-                            xy: randomGridPosition(),
+                            xy: positions[i],
                             display: "block",
                         };
-                    })
-                }
+                    });
+                }}
             >
                 shuffle
             </div>
             <animated.div
                 style={{
                     transform: propsMap.xys.interpolate(
-                        (x, y, s) => `scale(${s}) translate3d(${x}px,${y}px,0`
+                        (x, y, s) => `scale(${s}) translate3d(${x}px,${y}px,0)`
                     ),
                 }}
                 id="map"
             >
-                {propsImages.map(({xy, display, sc}, i) => (
+                {propsImages.map(({xy, display}, i) => (
                     <animated.div
                         className="image-container"
                         key={i}
@@ -116,11 +136,19 @@ function Viewpager() {
                         <animated.div
                             className="image"
                             style={{
-                                width: images[i].width,
-                                height: images[i].height,
+                                width: `${images[i].width}px`,
+                                height: `${images[i].height}px`,
                                 backgroundImage: `url(${images[i].src})`,
                             }}
                         />
+                        <animated.div
+                            className="legend"
+                            style={{
+                                "font-size": propsMap.xys.interpolate((x, y, s) => `${25 / s}px`),
+                            }}
+                        >
+                            {images[i].title}
+                        </animated.div>
                     </animated.div>
                 ))}
             </animated.div>
