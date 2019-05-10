@@ -18,7 +18,7 @@ function generateImages(number) {
         images.push({
             width: width,
             height: height,
-            src: `http://placekitten.com/${width}/${height}/`,
+            src: `https://placekitten.com/${width}/${height}/`,
             title: "Test",
         });
     }
@@ -89,6 +89,14 @@ function Viewpager() {
             };
             setPropsMap({xys: [position.current.x, position.current.y, zoomLevel.current]});
         },
+        onPinch: ({delta: [xDelta, yDelta]}) => {
+            zoomLevel.current = clamp(
+                yDelta > 0 ? ZOOM_SPEED * zoomLevel.current : zoomLevel.current / ZOOM_SPEED,
+                MIN_ZOOM,
+                MAX_ZOOM
+            );
+            setPropsMap({xys: [position.current.x, position.current.y, zoomLevel.current]});
+        },
         onWheel: ({delta: [xDelta, yDelta]}) => {
             zoomLevel.current = clamp(
                 yDelta < 0 ? ZOOM_SPEED * zoomLevel.current : zoomLevel.current / ZOOM_SPEED,
@@ -155,5 +163,9 @@ function Viewpager() {
         </div>
     );
 }
+
+document.body.addEventListener("touchmove", function(e) {
+    e.preventDefault();
+});
 
 render(<Viewpager />, document.getElementById("root"));

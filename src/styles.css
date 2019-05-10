@@ -4,7 +4,7 @@
 
 html,
 body {
-    overscroll-behavior-y: contain;
+    overscroll-behavior-y: none;
     margin: 0;
     padding: 0;
     height: 100%;
@@ -42,6 +42,7 @@ body {
     box-shadow: 0 6px 11px 0px rgba(50, 50, 73, 0.28);
     position: absolute;
     padding: 10px;
+    z-index: 10;
 }
 
 .image-container {
