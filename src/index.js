@@ -1,6 +1,6 @@
 import {render} from "react-dom";
 import React, {useRef} from "react";
-import {useSpring, useSprings, animated} from "react-spring";
+import {useSpring, useSprings, animated, config} from "react-spring";
 import {useGesture} from "react-use-gesture";
 import {clamp} from "lodash-es";
 
@@ -18,7 +18,7 @@ function generateImages(number) {
         images.push({
             width: width,
             height: height,
-            src: `https://placekitten.com/50/50/`,
+            src: `https://placekitten.com/${width}/${height}/`,
             title: "Test",
         });
     }
@@ -28,7 +28,7 @@ function generateImages(number) {
 const images = generateImages(10);
 
 const GRID_SIZE = 200;
-const ZOOM_SPEED = 1.2;
+const ZOOM_SPEED_WHEEL = 1.2;
 const INITIAL_ZOOM = 0.2;
 const MIN_ZOOM = 0.05;
 const MAX_ZOOM = 2;
@@ -70,9 +70,12 @@ function Viewpager() {
     const zoomLevel = useRef(INITIAL_ZOOM);
     const position = useRef({x: 0, y: 0});
 
-    const [propsMap, setPropsMap] = useSpring(() => {
-        return {xys: [0, 0, INITIAL_ZOOM]}; // x, y, scale
-    });
+    const [propsMap, setPropsMap] = useSpring(
+        () => {
+            return {xys: [0, 0, INITIAL_ZOOM]}; // x, y, scale
+        },
+        {config: config.wobbly}
+    );
 
     const initialPositions = generatePositions(images);
 
@@ -89,17 +92,16 @@ function Viewpager() {
             };
             setPropsMap({xys: [position.current.x, position.current.y, zoomLevel.current]});
         },
-        onPinch: ({delta: [xDelta, yDelta]}) => {
-            zoomLevel.current = clamp(
-                yDelta > 0 ? ZOOM_SPEED * zoomLevel.current : zoomLevel.current / ZOOM_SPEED,
-                MIN_ZOOM,
-                MAX_ZOOM
-            );
+        onPinch: ({previous: [previousDistance, previousAngle], da: [distance, angle]}) => {
+            const zoomSpeed = Math.pow(distance / previousDistance, 2);
+            zoomLevel.current = clamp(zoomLevel.current * zoomSpeed, MIN_ZOOM, MAX_ZOOM);
             setPropsMap({xys: [position.current.x, position.current.y, zoomLevel.current]});
         },
         onWheel: ({delta: [xDelta, yDelta]}) => {
             zoomLevel.current = clamp(
-                yDelta < 0 ? ZOOM_SPEED * zoomLevel.current : zoomLevel.current / ZOOM_SPEED,
+                yDelta < 0
+                    ? ZOOM_SPEED_WHEEL * zoomLevel.current
+                    : zoomLevel.current / ZOOM_SPEED_WHEEL,
                 MIN_ZOOM,
                 MAX_ZOOM
             );
@@ -152,8 +154,7 @@ function Viewpager() {
                         <animated.div
                             className="legend"
                             style={{
-                                "font-size": 12,
-                                // "font-size": propsMap.xys.interpolate((x, y, s) => `${25 / s}px`),
+                                fontSize: propsMap.xys.interpolate((x, y, s) => `${25 / s}px`),
                             }}
                         >
                             {images[i].title}

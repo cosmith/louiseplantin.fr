@@ -57,10 +57,10 @@ body {
     width: 1000px;
     height: 1000px;
     will-change: transform;
-    /*box-shadow: 0 62.5px 125px -25px rgba(50, 50, 73, 0.5);*/
+    box-shadow: 0 62.5px 125px -25px rgba(50, 50, 73, 0.5);
 }
 
 .image-container .legend {
-    font-size: 20px;
+    text-rendering: optimizeSpeed;
     will-change: font-size;
 }
