@@ -19,7 +19,8 @@ function generateImages(number) {
             width: width,
             height: height,
             src: `https://placekitten.com/${width}/${height}/`,
-            title: "Test",
+            title: "Nom",
+            subtitle: "Client",
         });
     }
     return images;
@@ -29,7 +30,7 @@ const images = generateImages(10);
 
 const GRID_SIZE = 200;
 const ZOOM_SPEED_WHEEL = 1.2;
-const INITIAL_ZOOM = 0.2;
+const INITIAL_ZOOM = 0.4;
 const MIN_ZOOM = 0.05;
 const MAX_ZOOM = 2;
 const MOVE_SPEED = 20;
@@ -149,6 +150,9 @@ function Viewpager() {
                                 width: `${images[i].width}px`,
                                 height: `${images[i].height}px`,
                                 backgroundImage: `url(${images[i].src})`,
+                                display: propsMap.xys.interpolate((x, y, s) =>
+                                    s > 0.1 ? "inherit" : "none"
+                                ),
                             }}
                         />
                         <animated.div
@@ -157,7 +161,7 @@ function Viewpager() {
                                 fontSize: propsMap.xys.interpolate((x, y, s) => `${25 / s}px`),
                             }}
                         >
-                            {images[i].title}
+                            {images[i].title} | {images[i].subtitle}
                         </animated.div>
                     </animated.div>
                 ))}
