@@ -12,25 +12,25 @@ function generateImages(number) {
     const images = [];
     while (count < number) {
         count = count + 1;
-        const width = randInt(500, 2000);
-        const height = randInt(500, 2000);
+        const width = randInt(800, 1200);
+        const height = randInt(600, 1200);
 
         images.push({
             width: width,
             height: height,
-            src: `https://placekitten.com/${width}/${height}/`,
+            src: `https://placekitten.com/50/50/`,
             title: "Test",
         });
     }
     return images;
 }
 
-const images = generateImages(20);
+const images = generateImages(10);
 
 const GRID_SIZE = 200;
 const ZOOM_SPEED = 1.2;
 const INITIAL_ZOOM = 0.2;
-const MIN_ZOOM = 0.2;
+const MIN_ZOOM = 0.05;
 const MAX_ZOOM = 2;
 const MOVE_SPEED = 20;
 
@@ -108,7 +108,7 @@ function Viewpager() {
     });
 
     return (
-        <div {...bind()} id="container">
+        <div {...bind()} id="container" className="touch-drag touch-zoom">
             <div
                 id="shuffle"
                 className="chrome"
@@ -152,7 +152,8 @@ function Viewpager() {
                         <animated.div
                             className="legend"
                             style={{
-                                "font-size": propsMap.xys.interpolate((x, y, s) => `${25 / s}px`),
+                                "font-size": 12,
+                                // "font-size": propsMap.xys.interpolate((x, y, s) => `${25 / s}px`),
                             }}
                         >
                             {images[i].title}
@@ -164,8 +165,14 @@ function Viewpager() {
     );
 }
 
-document.body.addEventListener("touchmove", function(e) {
+function preventDefault(e) {
     e.preventDefault();
-});
+}
+
+function disableScroll() {
+    document.body.addEventListener("touchmove", preventDefault, {passive: false});
+}
+
+disableScroll();
 
 render(<Viewpager />, document.getElementById("root"));
