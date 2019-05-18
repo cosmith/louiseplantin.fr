@@ -49,8 +49,6 @@ body {
 
 .image-container {
     position: absolute;
-    width: 100vw;
-    height: 100vh;
     will-change: transform;
 }
 
@@ -58,11 +56,11 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    will-change: transform;
+    will-change: width, height;
     box-shadow: 0 20.5px 64px 0px rgb(208, 208, 208);
 }
 
 .image-container .legend {
     text-rendering: optimizeSpeed;
-    will-change: font-size;
+    font-size: 20px;
 }

@@ -67,36 +67,56 @@ function generatePositions(images) {
     return positions;
 }
 
+const MIDDLE = {x: window.innerWidth / 2, y: window.innerHeight / 2};
+
 function Viewpager() {
     const zoomLevel = useRef(INITIAL_ZOOM);
-    const position = useRef({x: 0, y: 0});
-
-    const [propsMap, setPropsMap] = useSpring(
-        () => {
-            return {xys: [0, 0, INITIAL_ZOOM]}; // x, y, scale
-        },
-        {config: config.wobbly}
-    );
-
-    const initialPositions = generatePositions(images);
+    const mapPosition = useRef(MIDDLE);
+    const imagePositions = useRef(generatePositions(images));
 
     const [propsImages, setImages] = useSprings(images.length, i => ({
-        xy: initialPositions[i],
+        xys: [imagePositions.current[i][0], imagePositions.current[i][1], INITIAL_ZOOM],
         display: "block",
     }));
 
+    console.warn(mapPosition);
+
     const bind = useGesture({
         onDrag: ({vxvy: [vx, vy]}) => {
-            position.current = {
-                x: (vx * MOVE_SPEED) / zoomLevel.current + position.current.x,
-                y: (vy * MOVE_SPEED) / zoomLevel.current + position.current.y,
+            mapPosition.current = {
+                x: (vx * MOVE_SPEED) / zoomLevel.current + mapPosition.current.x,
+                y: (vy * MOVE_SPEED) / zoomLevel.current + mapPosition.current.y,
             };
-            setPropsMap({xys: [position.current.x, position.current.y, zoomLevel.current]});
+            setImages(i => {
+                return {
+                    xys: [
+                        MIDDLE.x +
+                            (imagePositions.current[i][0] + mapPosition.current.x) *
+                                zoomLevel.current,
+                        MIDDLE.y +
+                            (imagePositions.current[i][1] + mapPosition.current.y) *
+                                zoomLevel.current,
+                        zoomLevel.current,
+                    ],
+                };
+            });
         },
         onPinch: ({previous: [previousDistance, previousAngle], da: [distance, angle]}) => {
             const zoomSpeed = Math.pow(distance / previousDistance, 2);
             zoomLevel.current = clamp(zoomLevel.current * zoomSpeed, MIN_ZOOM, MAX_ZOOM);
-            setPropsMap({xys: [position.current.x, position.current.y, zoomLevel.current]});
+            setImages(i => {
+                return {
+                    xys: [
+                        MIDDLE.x +
+                            (imagePositions.current[i][0] + mapPosition.current.x) *
+                                zoomLevel.current,
+                        MIDDLE.y +
+                            (imagePositions.current[i][1] + mapPosition.current.y) *
+                                zoomLevel.current,
+                        zoomLevel.current,
+                    ],
+                };
+            });
         },
         onWheel: ({delta: [xDelta, yDelta]}) => {
             zoomLevel.current = clamp(
@@ -106,7 +126,19 @@ function Viewpager() {
                 MIN_ZOOM,
                 MAX_ZOOM
             );
-            setPropsMap({xys: [position.current.x, position.current.y, zoomLevel.current]});
+            setImages(i => {
+                return {
+                    xys: [
+                        MIDDLE.x +
+                            (imagePositions.current[i][0] + mapPosition.current.x) *
+                                zoomLevel.current,
+                        MIDDLE.y +
+                            (imagePositions.current[i][1] + mapPosition.current.y) *
+                                zoomLevel.current,
+                        zoomLevel.current,
+                    ],
+                };
+            });
         },
     });
 
@@ -116,50 +148,50 @@ function Viewpager() {
                 id="shuffle"
                 className="chrome"
                 onClick={() => {
-                    const positions = generatePositions(images);
+                    imagePositions.current = generatePositions(images);
                     setImages(i => {
                         return {
-                            xy: positions[i],
-                            display: "block",
+                            xys: [
+                                (imagePositions.current[i][0] + mapPosition.current.x) *
+                                    zoomLevel.current,
+                                (imagePositions.current[i][1] + mapPosition.current.y) *
+                                    zoomLevel.current,
+                                zoomLevel.current,
+                            ],
                         };
                     });
                 }}
             >
                 shuffle
             </div>
-            <animated.div
-                style={{
-                    transform: propsMap.xys.interpolate(
-                        (x, y, s) => `scale(${s}) translate3d(${x}px,${y}px,0)`
-                    ),
-                }}
-                id="map"
-            >
-                {propsImages.map(({xy, display}, i) => (
+            <animated.div id="map">
+                {propsImages.map(({xys, display}, i) => (
                     <animated.div
                         className="image-container"
                         key={i}
                         style={{
                             display,
-                            transform: xy.interpolate((x, y) => `translate3d(${x}px,${y}px,0)`),
+                            transform: xys.interpolate((x, y, s) => `translate3d(${x}px,${y}px,0`),
                         }}
                     >
                         <animated.div
                             className="image"
                             style={{
-                                width: `${images[i].width}px`,
-                                height: `${images[i].height}px`,
+                                width: xys.interpolate((x, y, s) => `${images[i].width * s}px`),
+                                height: xys.interpolate((x, y, s) => `${images[i].height * s}px`),
                                 backgroundImage: `url(${images[i].src})`,
-                                display: propsMap.xys.interpolate((x, y, s) =>
+                                display: xys.interpolate((x, y, s) =>
                                     s > 0.1 ? "inherit" : "none"
                                 ),
                             }}
                         />
                         <animated.div
                             className="legend"
-                            style={{
-                                fontSize: propsMap.xys.interpolate((x, y, s) => `${25 / s}px`),
-                            }}
+                            style={
+                                {
+                                    // fontSize: propsMap.xys.interpolate((x, y, s) => `${25 / s}px`),
+                                }
+                            }
                         >
                             {images[i].title} | {images[i].subtitle}
                         </animated.div>
