@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/louiseplantin.fr/static/css/main.1da2166d.chunk.css",
-    "main.js": "/louiseplantin.fr/static/js/main.73a8f3ef.chunk.js",
-    "main.js.map": "/louiseplantin.fr/static/js/main.73a8f3ef.chunk.js.map",
+    "main.css": "/louiseplantin.fr/static/css/main.80a6029d.chunk.css",
+    "main.js": "/louiseplantin.fr/static/js/main.5d2b5f80.chunk.js",
+    "main.js.map": "/louiseplantin.fr/static/js/main.5d2b5f80.chunk.js.map",
     "runtime~main.js": "/louiseplantin.fr/static/js/runtime~main.f7cc3245.js",
     "runtime~main.js.map": "/louiseplantin.fr/static/js/runtime~main.f7cc3245.js.map",
-    "static/js/2.0664e3c5.chunk.js": "/louiseplantin.fr/static/js/2.0664e3c5.chunk.js",
-    "static/js/2.0664e3c5.chunk.js.map": "/louiseplantin.fr/static/js/2.0664e3c5.chunk.js.map",
+    "static/js/2.61ef19a9.chunk.js": "/louiseplantin.fr/static/js/2.61ef19a9.chunk.js",
+    "static/js/2.61ef19a9.chunk.js.map": "/louiseplantin.fr/static/js/2.61ef19a9.chunk.js.map",
     "index.html": "/louiseplantin.fr/index.html",
-    "precache-manifest.c4de9ad46d7957018532b5be54bce944.js": "/louiseplantin.fr/precache-manifest.c4de9ad46d7957018532b5be54bce944.js",
+    "precache-manifest.73ce754e844ba5b7e38f5ac918e6767d.js": "/louiseplantin.fr/precache-manifest.73ce754e844ba5b7e38f5ac918e6767d.js",
     "service-worker.js": "/louiseplantin.fr/service-worker.js",
-    "static/css/main.1da2166d.chunk.css.map": "/louiseplantin.fr/static/css/main.1da2166d.chunk.css.map"
+    "static/css/main.80a6029d.chunk.css.map": "/louiseplantin.fr/static/css/main.80a6029d.chunk.css.map"
   }
 }
