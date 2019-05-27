@@ -1,5 +1,5 @@
 import {render} from "react-dom";
-import React, {useRef} from "react";
+import React, {useRef, useState} from "react";
 import {useSprings, animated} from "react-spring";
 import {useGesture} from "react-use-gesture";
 import {clamp, random} from "lodash-es";
@@ -8,6 +8,11 @@ import {intersects} from "./utils";
 import {ZoomButtons, ShuffleButton, ArrowButtons, SearchBar, Menu} from "./chrome";
 import "./styles.css";
 
+function getRandomFilter() {
+    const n = random(1, 3);
+    return n === 1 ? "Facilitation" : n === 2 ? "Corporate" : "Jeunesse";
+}
+
 function generateImages(number) {
     let count = 0;
     const images = [];
@@ -15,6 +20,7 @@ function generateImages(number) {
         count = count + 1;
         const width = random(800, 1200);
         const height = random(600, 1200);
+        const filter = getRandomFilter();
 
         images.push({
             width: width,
@@ -22,14 +28,15 @@ function generateImages(number) {
             src: `https://placekitten.com/${width}/${height}/`,
             client: "Vinci",
             year: "2019",
-            category: "Facilitation graphique",
+            category: filter,
+            filter: filter,
             project: "Réunion prospective pour l'avenir des autoroutes",
         });
     }
     return images;
 }
 
-const images = generateImages(10);
+const images = generateImages(20);
 
 const GRID_SIZE = 300;
 const ZOOM_SPEED_WHEEL = 1.05;
@@ -40,10 +47,14 @@ const MAX_ZOOM = 2;
 const MOVE_SPEED = 20;
 const MARGIN = 300;
 
-function generatePositions(images) {
+function generatePositions(images, filters) {
     const positions = [];
 
     images.forEach(image => {
+        if (!filters[image.filter]) {
+            positions.push([0, 0]);
+            return;
+        }
         let x = random(-50, 50) * GRID_SIZE;
         let y = random(-50, 50) * GRID_SIZE;
         let theta = 0;
@@ -74,7 +85,7 @@ function generatePositions(images) {
 
 const MIDDLE = {x: window.innerWidth / 2, y: window.innerHeight / 2};
 
-function getImagesParams(imagePositions, mapPosition, zoomLevel) {
+function getImagesParams(imagePositions, mapPosition, zoomLevel, filters) {
     return i => {
         return {
             xys: [
@@ -84,6 +95,7 @@ function getImagesParams(imagePositions, mapPosition, zoomLevel) {
                     (imagePositions.current[i][1] + mapPosition.current.y) * zoomLevel.current,
                 zoomLevel.current,
             ],
+            display: filters[images[i].filter] ? "block" : "none",
         };
     };
 }
@@ -104,11 +116,12 @@ function LegendSpan({xys, cutoff, text}) {
 function Viewpager() {
     const zoomLevel = useRef(INITIAL_ZOOM);
     const mapPosition = useRef({x: 0, y: 0});
-    const imagePositions = useRef(generatePositions(images));
+    const [filters, setFilters] = useState({Facilitation: true, Corporate: true, Jeunesse: true});
+    const imagePositions = useRef(generatePositions(images, filters));
 
     const [propsImages, setImages] = useSprings(
         images.length,
-        getImagesParams(imagePositions, mapPosition, zoomLevel)
+        getImagesParams(imagePositions, mapPosition, zoomLevel, filters)
     );
 
     const bind = useGesture({
@@ -117,12 +130,12 @@ function Viewpager() {
                 x: (vx * MOVE_SPEED) / zoomLevel.current + mapPosition.current.x,
                 y: (vy * MOVE_SPEED) / zoomLevel.current + mapPosition.current.y,
             };
-            setImages(getImagesParams(imagePositions, mapPosition, zoomLevel));
+            setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
         },
         onPinch: ({previous: [previousDistance, previousAngle], da: [distance, angle]}) => {
             const zoomSpeed = Math.pow(distance / previousDistance, 2);
             zoomLevel.current = clamp(zoomLevel.current * zoomSpeed, MIN_ZOOM, MAX_ZOOM);
-            setImages(getImagesParams(imagePositions, mapPosition, zoomLevel));
+            setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
         },
         onWheel: ({delta: [xDelta, yDelta]}) => {
             zoomLevel.current = clamp(
@@ -132,7 +145,7 @@ function Viewpager() {
                 MIN_ZOOM,
                 MAX_ZOOM
             );
-            setImages(getImagesParams(imagePositions, mapPosition, zoomLevel));
+            setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
         },
     });
 
@@ -140,8 +153,8 @@ function Viewpager() {
         <div {...bind()} id="container" className="touch-drag touch-zoom">
             <ShuffleButton
                 onClick={() => {
-                    imagePositions.current = generatePositions(images);
-                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel));
+                    imagePositions.current = generatePositions(images, filters);
+                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
                 }}
             />
             <ZoomButtons
@@ -153,12 +166,20 @@ function Viewpager() {
                         MIN_ZOOM,
                         MAX_ZOOM
                     );
-                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel));
+                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
                 }}
             />
             <ArrowButtons onClick={() => {}} />
             <SearchBar onSearch={() => {}} />
-            <Menu onFiltersChange={() => {}} />
+            <Menu
+                filters={filters}
+                onFilterClick={filter => {
+                    const newFilters = {...filters, [filter]: !filters[filter]};
+                    setFilters(newFilters);
+                    imagePositions.current = generatePositions(images, newFilters);
+                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, newFilters));
+                }}
+            />
             <animated.div id="map">
                 {propsImages.map(({xys, display}, i) => (
                     <animated.div

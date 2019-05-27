@@ -43,7 +43,7 @@ export function SearchBar({onSearch}) {
     );
 }
 
-export function Menu({filters, onFiltersChange}) {
+export function Menu({filters, onFilterClick}) {
     return (
         <div className="chrome menu">
             <div className="menu-section menu-title">
@@ -59,9 +59,24 @@ export function Menu({filters, onFiltersChange}) {
                 06 52 55 41 18
             </div>
             <div className="menu-section menu-filters">
-                <div className="menu-filters-option">╳ Facilitation</div>
-                <div className="menu-filters-option">╳ Corporate</div>
-                <div className="menu-filters-option">╳ Jeunesse</div>
+                <div
+                    className="menu-filters-option"
+                    onClick={onFilterClick.bind(null, "Facilitation")}
+                >
+                    {filters.Facilitation ? "⌧" : "□"} Facilitation
+                </div>
+                <div
+                    className="menu-filters-option"
+                    onClick={onFilterClick.bind(null, "Corporate")}
+                >
+                    {filters.Corporate ? "⌧" : "□"} Corporate
+                </div>
+                <div
+                    className="menu-filters-option"
+                    onClick={onFilterClick.bind(null, "Jeunesse")}
+                >
+                    {filters.Jeunesse ? "⌧" : "□"} Jeunesse
+                </div>
             </div>
             <div className="menu-collapse" />
         </div>
