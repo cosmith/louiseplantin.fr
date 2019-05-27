@@ -2,9 +2,10 @@ import {render} from "react-dom";
 import React, {useRef} from "react";
 import {useSprings, animated} from "react-spring";
 import {useGesture} from "react-use-gesture";
-import {clamp} from "lodash-es";
+import {clamp, random} from "lodash-es";
 
-import {randInt, intersects} from "./utils";
+import {intersects} from "./utils";
+import {ZoomButtons, ShuffleButton, ArrowButtons, SearchBar, Menu} from "./chrome";
 import "./styles.css";
 
 function generateImages(number) {
@@ -12,8 +13,8 @@ function generateImages(number) {
     const images = [];
     while (count < number) {
         count = count + 1;
-        const width = randInt(800, 1200);
-        const height = randInt(600, 1200);
+        const width = random(800, 1200);
+        const height = random(600, 1200);
 
         images.push({
             width: width,
@@ -32,18 +33,19 @@ const images = generateImages(10);
 
 const GRID_SIZE = 300;
 const ZOOM_SPEED_WHEEL = 1.05;
+const ZOOM_SPEED_BUTTONS = 1.7;
 const INITIAL_ZOOM = 0.4;
 const MIN_ZOOM = 0.05;
 const MAX_ZOOM = 2;
 const MOVE_SPEED = 20;
-const MARGIN = 150;
+const MARGIN = 300;
 
 function generatePositions(images) {
     const positions = [];
 
     images.forEach(image => {
-        let x = randInt(-50, 50) * GRID_SIZE;
-        let y = randInt(-50, 50) * GRID_SIZE;
+        let x = random(-50, 50) * GRID_SIZE;
+        let y = random(-50, 50) * GRID_SIZE;
         let theta = 0;
         let radius = 0;
 
@@ -51,7 +53,7 @@ function generatePositions(images) {
 
         while (hasIntersection) {
             hasIntersection = false;
-            theta += (randInt(10, 25) / 180) * Math.PI;
+            theta += (random(10, 25) / 180) * Math.PI;
             if (theta > Math.PI * 2) {
                 radius += 50;
             }
@@ -101,13 +103,13 @@ function LegendSpan({xys, cutoff, text}) {
 
 function Viewpager() {
     const zoomLevel = useRef(INITIAL_ZOOM);
-    const mapPosition = useRef(MIDDLE);
+    const mapPosition = useRef({x: 0, y: 0});
     const imagePositions = useRef(generatePositions(images));
 
-    const [propsImages, setImages] = useSprings(images.length, i => ({
-        xys: [imagePositions.current[i][0], imagePositions.current[i][1], INITIAL_ZOOM],
-        display: "block",
-    }));
+    const [propsImages, setImages] = useSprings(
+        images.length,
+        getImagesParams(imagePositions, mapPosition, zoomLevel)
+    );
 
     const bind = useGesture({
         onDrag: ({vxvy: [vx, vy]}) => {
@@ -136,16 +138,27 @@ function Viewpager() {
 
     return (
         <div {...bind()} id="container" className="touch-drag touch-zoom">
-            <div
-                id="shuffle"
-                className="chrome"
+            <ShuffleButton
                 onClick={() => {
                     imagePositions.current = generatePositions(images);
                     setImages(getImagesParams(imagePositions, mapPosition, zoomLevel));
                 }}
-            >
-                shuffle
-            </div>
+            />
+            <ZoomButtons
+                onClick={direction => {
+                    zoomLevel.current = clamp(
+                        direction > 0
+                            ? ZOOM_SPEED_BUTTONS * zoomLevel.current
+                            : zoomLevel.current / ZOOM_SPEED_BUTTONS,
+                        MIN_ZOOM,
+                        MAX_ZOOM
+                    );
+                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel));
+                }}
+            />
+            <ArrowButtons onClick={() => {}} />
+            <SearchBar onSearch={() => {}} />
+            <Menu onFiltersChange={() => {}} />
             <animated.div id="map">
                 {propsImages.map(({xys, display}, i) => (
                     <animated.div

@@ -1,0 +1,103 @@
+.chrome {
+    box-shadow: 0 3px 8px 0px rgba(50, 50, 73, 0.28);
+    position: absolute;
+    z-index: 10;
+    background: white;
+    border-radius: 1px;
+    text-align: center;
+    line-height: 20px;
+}
+
+.chrome-button {
+    cursor: pointer;
+}
+
+.chrome-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.zoom {
+    top: 20px;
+    right: 20px;
+}
+
+.zoom .zoom-plus,
+.zoom .zoom-minus {
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+    line-height: 24px;
+}
+
+.zoom .zoom-plus {
+    border-bottom: 1px solid black;
+}
+
+.arrow {
+    bottom: 20px;
+    right: 20px;
+    flex: 1;
+    flex-direction: row;
+}
+
+.arrow .arrow-left,
+.arrow .arrow-right {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    font-size: 30px;
+    line-height: 44px;
+}
+
+.arrow-left {
+    border-right: 1px solid black;
+}
+
+.shuffle {
+    width: 100px;
+    height: 40px;
+    bottom: 50vh;
+    left: 20px;
+}
+
+.search {
+    left: 20px;
+    bottom: 20px;
+    padding: 3px;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+.search-input {
+    height: 30px;
+    width: 200px;
+    border: none;
+    font-size: 16px;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.chrome.menu {
+    left: 20px;
+    top: 0px;
+    text-align: left;
+    padding-top: 10px;
+    font-size: 22px;
+    line-height: 24px;
+}
+
+.menu .menu-section {
+    width: 200px;
+    padding: 10px;
+}
+
+.menu-title,
+.menu-contact {
+    border-bottom: 1px solid black;
+}
+
+.menu-filters-option {
+    cursor: pointer;
+}
