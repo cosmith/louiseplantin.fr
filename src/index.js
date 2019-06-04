@@ -5,7 +5,7 @@ import {useGesture} from "react-use-gesture";
 import {clamp, random} from "lodash-es";
 
 import {intersects} from "./utils";
-import {ZoomButtons, ShuffleButton, ArrowButtons, SearchBar, Menu} from "./chrome";
+import {ZoomButtons, ArrowButtons, SearchBar, Menu} from "./chrome";
 import "./styles.css";
 
 function getRandomFilter() {
@@ -38,14 +38,18 @@ function generateImages(number) {
 
 const images = generateImages(20);
 
+const INITIAL_ZOOM = 0.4;
+const INITIAL_FILTERS = {Facilitation: true, Corporate: true, Jeunesse: true};
+const INITIAL_MAP_POSITION = {x: 0, y: 0};
+
+const MARGIN = 300;
 const GRID_SIZE = 300;
+
 const ZOOM_SPEED_WHEEL = 1.05;
 const ZOOM_SPEED_BUTTONS = 1.7;
-const INITIAL_ZOOM = 0.4;
 const MIN_ZOOM = 0.05;
 const MAX_ZOOM = 2;
 const MOVE_SPEED = 20;
-const MARGIN = 300;
 
 function generatePositions(images, filters) {
     const positions = [];
@@ -115,8 +119,8 @@ function LegendSpan({xys, cutoff, text}) {
 
 function Viewpager() {
     const zoomLevel = useRef(INITIAL_ZOOM);
-    const mapPosition = useRef({x: 0, y: 0});
-    const [filters, setFilters] = useState({Facilitation: true, Corporate: true, Jeunesse: true});
+    const mapPosition = useRef(INITIAL_MAP_POSITION);
+    const [filters, setFilters] = useState(INITIAL_FILTERS);
     const imagePositions = useRef(generatePositions(images, filters));
 
     const [propsImages, setImages] = useSprings(
@@ -151,14 +155,15 @@ function Viewpager() {
 
     return (
         <div {...bind()} id="container" className="touch-drag touch-zoom">
-            <ShuffleButton
-                onClick={() => {
-                    imagePositions.current = generatePositions(images, filters);
+            <ZoomButtons
+                onHomeClick={() => {
+                    zoomLevel.current = INITIAL_ZOOM;
+                    mapPosition.current = INITIAL_MAP_POSITION;
+                    setFilters(INITIAL_FILTERS);
+                    imagePositions.current = generatePositions(images, INITIAL_FILTERS);
                     setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
                 }}
-            />
-            <ZoomButtons
-                onClick={direction => {
+                onZoomClick={direction => {
                     zoomLevel.current = clamp(
                         direction > 0
                             ? ZOOM_SPEED_BUTTONS * zoomLevel.current
@@ -166,6 +171,10 @@ function Viewpager() {
                         MIN_ZOOM,
                         MAX_ZOOM
                     );
+                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+                }}
+                onShuffleClick={() => {
+                    imagePositions.current = generatePositions(images, filters);
                     setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
                 }}
             />
