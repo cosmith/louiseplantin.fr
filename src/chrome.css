@@ -140,7 +140,11 @@
     border-bottom: 1px solid black;
 }
 
-.menu .menu-social .picto {
+.menu .menu-contact .menu-social {
+    margin-top: -8px;
+}
+
+.menu .menu-contact .menu-social .picto {
     padding-left: 1px;
     padding-right: 9px;
 }
