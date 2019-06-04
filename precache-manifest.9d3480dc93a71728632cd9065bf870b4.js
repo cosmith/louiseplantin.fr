@@ -1,18 +1,18 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a8c7446b2067e2a5ea541ca789792c57",
+    "revision": "5f3718a2f77587be4eaf32013a242117",
     "url": "/louiseplantin.fr/index.html"
   },
   {
-    "revision": "029a2ff8cbd239f0ef3d",
-    "url": "/louiseplantin.fr/static/css/main.18127502.chunk.css"
+    "revision": "7639a6ae433875972695",
+    "url": "/louiseplantin.fr/static/css/main.cc10db1a.chunk.css"
   },
   {
     "revision": "880084a2818f7f1307e2",
     "url": "/louiseplantin.fr/static/js/2.4d0ae2e3.chunk.js"
   },
   {
-    "revision": "029a2ff8cbd239f0ef3d",
+    "revision": "7639a6ae433875972695",
     "url": "/louiseplantin.fr/static/js/main.31b5e6d5.chunk.js"
   },
   {
