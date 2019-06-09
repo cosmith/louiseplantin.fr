@@ -7,47 +7,19 @@ import {clamp, random} from "lodash-es";
 import {intersects} from "./utils";
 import {ZoomButtons, ArrowButtons, SearchBar, Menu} from "./chrome";
 import "./styles.css";
-
-function getRandomFilter() {
-    const n = random(1, 3);
-    return n === 1 ? "Facilitation" : n === 2 ? "Corporate" : "Jeunesse";
-}
-
-function generateImages(number) {
-    let count = 0;
-    const images = [];
-    while (count < number) {
-        count = count + 1;
-        const width = random(800, 1200);
-        const height = random(600, 1200);
-        const filter = getRandomFilter();
-
-        images.push({
-            width: width,
-            height: height,
-            src: `https://placekitten.com/${width}/${height}/`,
-            client: "Vinci",
-            year: "2019",
-            category: filter,
-            filter: filter,
-            project: "Réunion prospective pour l'avenir des autoroutes",
-        });
-    }
-    return images;
-}
-
-const images = generateImages(20);
+import images from "./images.json";
 
 const INITIAL_ZOOM = 0.4;
 const INITIAL_FILTERS = {Facilitation: true, Corporate: true, Jeunesse: true};
 const INITIAL_MAP_POSITION = {x: 0, y: 0};
 
-const MARGIN = 300;
-const GRID_SIZE = 300;
+const MARGIN = 1000;
+const GRID_SIZE = 1000;
 
 const ZOOM_SPEED_WHEEL = 1.05;
 const ZOOM_SPEED_BUTTONS = 1.7;
-const MIN_ZOOM = 0.05;
+const MIN_ZOOM = 0.01;
+const HIDE_IMAGES_ZOOM = 0.03;
 const MAX_ZOOM = 2;
 const MOVE_SPEED = 20;
 
@@ -204,9 +176,9 @@ function Viewpager() {
                             style={{
                                 width: xys.interpolate((x, y, s) => `${images[i].width * s}px`),
                                 height: xys.interpolate((x, y, s) => `${images[i].height * s}px`),
-                                backgroundImage: `url(${images[i].src})`,
+                                backgroundImage: `url("${images[i].src}")`,
                                 display: xys.interpolate((x, y, s) =>
-                                    s > 0.15 ? "inherit" : "none"
+                                    s > HIDE_IMAGES_ZOOM ? "inherit" : "none"
                                 ),
                             }}
                         />
