@@ -9,13 +9,18 @@ if __name__ == "__main__":
         if files:
             category = root.split("/")[-1]
             for filename in files:
-                width, height = Image.open(root + "/" + filename).size
+                print("-", filename)
+                filepath = root + "/" + filename
+                img = Image.open(filepath)
+                width, height = img.size
+                img.thumbnail((1000, 1000), Image.ANTIALIAS)
+                img.convert("RGB").save(filepath.replace("/images/", "/thumbs/"), "jpeg")
                 filelist.append(
                     {
-                        "src": f"/images/{category}/{filename}",
+                        "src": f"/thumbs/{category}/{filename}",
                         "width": width,
                         "height": height,
-                        "client": "Vinci",
+                        "client": filename[:10],
                         "year": "2019",
                         "category": category,
                         "filter": category,

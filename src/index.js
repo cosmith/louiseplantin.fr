@@ -9,7 +9,7 @@ import {ZoomButtons, ArrowButtons, SearchBar, Menu} from "./chrome";
 import "./styles.css";
 import images from "./images.json";
 
-const INITIAL_ZOOM = 0.4;
+const INITIAL_ZOOM = 0.1;
 const INITIAL_FILTERS = {Facilitation: true, Corporate: true, Jeunesse: true};
 const INITIAL_MAP_POSITION = {x: 0, y: 0};
 
@@ -184,9 +184,9 @@ function Viewpager() {
                         />
                         <animated.div className="legend">
                             {images[i].client}
-                            <LegendSpan xys={xys} cutoff={0.15} text={images[i].year} />
-                            <LegendSpan xys={xys} cutoff={0.35} text={images[i].category} />
-                            <LegendSpan xys={xys} cutoff={0.6} text={images[i].project} />
+                            <LegendSpan xys={xys} cutoff={0.05} text={images[i].year} />
+                            <LegendSpan xys={xys} cutoff={0.15} text={images[i].category} />
+                            <LegendSpan xys={xys} cutoff={0.25} text={images[i].project} />
                         </animated.div>
                     </animated.div>
                 ))}
