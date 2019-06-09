@@ -17,7 +17,7 @@ if __name__ == "__main__":
                 img.convert("RGB").save(filepath.replace("/images/", "/thumbs/"), "jpeg")
                 filelist.append(
                     {
-                        "src": f"/thumbs/{category}/{filename}",
+                        "src": f"./thumbs/{category}/{filename}",
                         "width": width,
                         "height": height,
                         "client": filename[:10],
