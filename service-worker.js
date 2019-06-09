@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.0/workbox-sw.js");
 
 importScripts(
-  "/louiseplantin.fr/precache-manifest.9d3480dc93a71728632cd9065bf870b4.js"
+  "/louiseplantin.fr/precache-manifest.9e7cd8fd40ed408ddf3841dabc7b271c.js"
 );
 
 self.addEventListener('message', (event) => {
