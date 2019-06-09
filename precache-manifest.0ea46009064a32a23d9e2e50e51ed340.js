@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6f6faaadefa67b491889b6bf8bd0e804",
+    "revision": "1cc418cb91687b6eed96b4d6d76f7da4",
     "url": "/louiseplantin.fr/index.html"
   },
   {
-    "revision": "0a890694436da5e35a08",
+    "revision": "d41ef8c1408143d19484",
     "url": "/louiseplantin.fr/static/css/main.69efeeda.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/louiseplantin.fr/static/js/2.cab6e350.chunk.js"
   },
   {
-    "revision": "0a890694436da5e35a08",
-    "url": "/louiseplantin.fr/static/js/main.c50a4929.chunk.js"
+    "revision": "d41ef8c1408143d19484",
+    "url": "/louiseplantin.fr/static/js/main.81df2a7b.chunk.js"
   },
   {
     "revision": "7ef3ca3c19986e7a1ec7",
