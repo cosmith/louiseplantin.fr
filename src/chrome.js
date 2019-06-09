@@ -61,6 +61,14 @@ export function SearchBar({onSearch}) {
     );
 }
 
+function MenuFilterOption({filters, name, label, onChange}) {
+    return (
+        <div className="menu-filters-option" onClick={onChange.bind(null, name)}>
+            <Picto letter={filters[name] ? "M" : "L"} /> {label}
+        </div>
+    );
+}
+
 export function Menu({filters, onFilterClick}) {
     return (
         <div className="chrome menu">
@@ -102,24 +110,24 @@ export function Menu({filters, onFilterClick}) {
                 </div>
             </div>
             <div className="menu-section menu-filters">
-                <div
-                    className="menu-filters-option"
-                    onClick={onFilterClick.bind(null, "Facilitation")}
-                >
-                    {filters.Facilitation ? "⌧" : "□"} Facilitation
-                </div>
-                <div
-                    className="menu-filters-option"
-                    onClick={onFilterClick.bind(null, "Corporate")}
-                >
-                    {filters.Corporate ? "⌧" : "□"} Corporate
-                </div>
-                <div
-                    className="menu-filters-option"
-                    onClick={onFilterClick.bind(null, "Jeunesse")}
-                >
-                    {filters.Jeunesse ? "⌧" : "□"} Jeunesse
-                </div>
+                <MenuFilterOption
+                    filters={filters}
+                    name={"Facilitation"}
+                    label={"Facilitation"}
+                    onChange={onFilterClick}
+                />
+                <MenuFilterOption
+                    filters={filters}
+                    name={"Corporate"}
+                    label={"Corporate"}
+                    onChange={onFilterClick}
+                />
+                <MenuFilterOption
+                    filters={filters}
+                    name={"Jeunesse"}
+                    label={"Jeunesse"}
+                    onChange={onFilterClick}
+                />
             </div>
             <div className="menu-collapse" />
         </div>
