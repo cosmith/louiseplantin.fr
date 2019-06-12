@@ -9,18 +9,18 @@ import {ZoomButtons, ArrowButtons, SearchBar, Menu} from "./chrome";
 import "./styles.css";
 import images from "./images.json";
 
-const INITIAL_ZOOM = 0.1;
+const INITIAL_ZOOM = 0.2;
 const INITIAL_FILTERS = {Facilitation: true, Corporate: true, Jeunesse: true};
 const INITIAL_MAP_POSITION = {x: 0, y: 0};
 
-const MARGIN = 1000;
-const GRID_SIZE = 1000;
+const MARGIN = 300;
+const GRID_SIZE = 400;
 
-const ZOOM_SPEED_WHEEL = 1.05;
+const ZOOM_SPEED_WHEEL = 1.1;
 const ZOOM_SPEED_BUTTONS = 1.7;
 const MIN_ZOOM = 0.01;
 const HIDE_IMAGES_ZOOM = 0.03;
-const MAX_ZOOM = 2;
+const MAX_ZOOM = 1.3;
 const MOVE_SPEED = 20;
 
 function generatePositions(images, filters) {
@@ -28,6 +28,7 @@ function generatePositions(images, filters) {
 
     images.forEach(image => {
         if (!filters[image.filter]) {
+            // don't compute for images hidden by filters
             positions.push([0, 0]);
             return;
         }
@@ -87,6 +88,37 @@ function LegendSpan({xys, cutoff, text}) {
             {text}
         </animated.span>
     );
+}
+
+function showImage(x, y, s, image, mapPosition) {
+    const displayMargin = 50;
+    if (x > window.innerWidth + displayMargin) {
+        return false;
+    }
+    if (y > window.innerHeight + displayMargin) {
+        return false;
+    }
+    if (x + image.width * s + displayMargin < 0) {
+        return false;
+    }
+    if (y + image.height * s + displayMargin < 0) {
+        return false;
+    }
+    return true;
+}
+
+function getSourceVariant(s, image) {
+    let scale;
+    if (s > 0.7) {
+        scale = "@original";
+    } else if (s > 0.5) {
+        scale = "@3x";
+    } else if (s > 0.2) {
+        scale = "@2x";
+    } else {
+        scale = "@1x";
+    }
+    return `url("${image.src}${scale}.jpg")`;
 }
 
 function Viewpager() {
@@ -161,32 +193,64 @@ function Viewpager() {
                     setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, newFilters));
                 }}
             />
+            {/*<animated.div className="debug-info">
+                {propsImages.map(({xys, display}, i) => (
+                    <animated.div
+                        style={{
+                            padding: "5px",
+                            backgroundColor: xys.interpolate((x, y, s) =>
+                                showImage(x, y, s, images[i], mapPosition.current) ? "blue" : "red"
+                            ),
+                            flex: 1,
+                        }}
+                    >
+                        {i}
+                    </animated.div>
+                ))}
+            </animated.div>*/}
             <animated.div id="map">
                 {propsImages.map(({xys, display}, i) => (
                     <animated.div
                         className="image-container"
                         key={i}
                         style={{
-                            display,
-                            transform: xys.interpolate((x, y, s) => `translate3d(${x}px,${y}px,0`),
+                            display: xys.interpolate((x, y, s) =>
+                                showImage(x, y, s, images[i], mapPosition.current)
+                                    ? display.value
+                                    : "none"
+                            ),
+                            transform: xys.interpolate(
+                                (x, y, s) => `translate3d(${x}px,${y}px,0)`
+                            ),
                         }}
                     >
                         <animated.div
                             className="image"
                             style={{
-                                width: xys.interpolate((x, y, s) => `${images[i].width * s}px`),
-                                height: xys.interpolate((x, y, s) => `${images[i].height * s}px`),
-                                backgroundImage: `url("${images[i].src}")`,
+                                width: `${images[i].width}px`,
+                                height: `${images[i].height}px`,
+                                transform: xys.interpolate((x, y, s) => `scale(${s})`),
+                                transformOrigin: "0 0",
+                                backgroundImage: xys.interpolate((x, y, s) =>
+                                    getSourceVariant(s, images[i])
+                                ),
                                 display: xys.interpolate((x, y, s) =>
                                     s > HIDE_IMAGES_ZOOM ? "inherit" : "none"
                                 ),
                             }}
                         />
-                        <animated.div className="legend">
+                        <animated.div
+                            className="legend"
+                            style={{
+                                position: "absolute",
+                                top: xys.interpolate((x, y, s) => `${images[i].height * s}px`),
+                            }}
+                        >
                             {images[i].client}
-                            <LegendSpan xys={xys} cutoff={0.05} text={images[i].year} />
-                            <LegendSpan xys={xys} cutoff={0.15} text={images[i].category} />
-                            <LegendSpan xys={xys} cutoff={0.25} text={images[i].project} />
+                            <LegendSpan xys={xys} cutoff={0.1} text={images[i].year} />
+                            <LegendSpan xys={xys} cutoff={0.2} text={images[i].category} />
+                            <LegendSpan xys={xys} cutoff={0.3} text={images[i].project} />
+                            <LegendSpan xys={xys} cutoff={0.45} text={images[i].description} />
                         </animated.div>
                     </animated.div>
                 ))}

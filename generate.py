@@ -1,31 +1,71 @@
-import os
 import json
+import os
+
+from tqdm import tqdm
+from unidecode import unidecode
 from PIL import Image
 
 filelist = []
+
+
+def get_parts(filename):
+    name = os.path.splitext(filename)[0]
+    parts = name.split("|")
+
+    if len(parts) == 4:
+        [client, year, project, description] = parts
+        number = 0
+    elif len(parts) == 5:
+        [client, year, project, description, number] = parts
+    else:
+        raise ValueError(f"invalid file name {filename}")
+
+    return {
+        "client": client,
+        "year": year,
+        "project": project,
+        "description": description,
+        "number": number,
+    }
+
+
+def save_thumbnails(filepath):
+    path_no_ext = os.path.splitext(filepath)[0]
+    path = unidecode(path_no_ext).replace("/images/", "/thumbs/").replace(" ", "_")
+
+    for size, number in ((200, 1), (500, 2), (1000, 3)):
+        image = Image.open(filepath)
+        image.thumbnail((size, size), Image.ANTIALIAS)
+        image.convert("RGB").save(f"{path}@{number}x.jpg", "jpeg")
+
+    image = Image.open(filepath)
+    image.convert("RGB").save(f"{path}@original.jpg", "jpeg")  # original size
+    return image.size, path
+
 
 if __name__ == "__main__":
     for root, dirs, files in os.walk("./public/images/"):
         if files:
             category = root.split("/")[-1]
-            for filename in files:
-                print("-", filename)
+            print(f"Processing {category}...")
+
+            for filename in tqdm(files):
+                if filename.startswith("."):
+                    continue
+
+                parts = get_parts(filename)
                 filepath = root + "/" + filename
-                img = Image.open(filepath)
-                width, height = img.size
-                img.thumbnail((1000, 1000), Image.ANTIALIAS)
-                img.convert("RGB").save(filepath.replace("/images/", "/thumbs/"), "jpeg")
+                (width, height), src = save_thumbnails(filepath)
+
                 filelist.append(
-                    {
-                        "src": f"./thumbs/{category}/{filename}",
-                        "width": width,
-                        "height": height,
-                        "client": filename[:10],
-                        "year": "2019",
-                        "category": category,
-                        "filter": category,
-                        "project": filename.replace("_", " ").replace(".jpg", ""),
-                    }
+                    dict(
+                        src=f"./thumbs/{src.split('/thumbs/')[1]}",
+                        width=width,
+                        height=height,
+                        category=category,
+                        filter=category,
+                        **parts,
+                    )
                 )
 
     with open("./src/images.json", "w") as f:
