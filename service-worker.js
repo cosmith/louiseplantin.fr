@@ -11,10 +11,10 @@
  * See https://goo.gl/2aRDsh
  */
 
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.0/workbox-sw.js");
+importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/louiseplantin.fr/precache-manifest.df4cac1e4a475214d2b0f9f3080e5753.js"
+  "/louiseplantin.fr/precache-manifest.821babecb8668b6188644dd0a179544e.js"
 );
 
 self.addEventListener('message', (event) => {
