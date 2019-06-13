@@ -16,10 +16,10 @@ const INITIAL_MAP_POSITION = {x: 0, y: 0};
 const MARGIN = 300;
 const GRID_SIZE = 400;
 
-const ZOOM_SPEED_WHEEL = 1.1;
+const ZOOM_SPEED_WHEEL = 1.2;
 const ZOOM_SPEED_BUTTONS = 1.7;
 const MIN_ZOOM = 0.01;
-const HIDE_IMAGES_ZOOM = 0.03;
+const HIDE_IMAGES_ZOOM = 0.06;
 const MAX_ZOOM = 1.3;
 const MOVE_SPEED = 20;
 
@@ -109,11 +109,11 @@ function showImage(x, y, s, image, mapPosition) {
 
 function getSourceVariant(s, image) {
     let scale;
-    if (s > 0.7) {
+    if (s > 0.8) {
         scale = "@original";
-    } else if (s > 0.5) {
+    } else if (s > 0.4) {
         scale = "@3x";
-    } else if (s > 0.2) {
+    } else if (s > 0.1) {
         scale = "@2x";
     } else {
         scale = "@1x";
@@ -146,6 +146,9 @@ function Viewpager() {
             setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
         },
         onWheel: ({delta: [xDelta, yDelta]}) => {
+            if (yDelta === 0) {
+                return;
+            }
             zoomLevel.current = clamp(
                 yDelta < 0
                     ? ZOOM_SPEED_WHEEL * zoomLevel.current
