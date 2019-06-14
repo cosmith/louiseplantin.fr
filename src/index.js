@@ -16,10 +16,10 @@ const INITIAL_MAP_POSITION = {x: 0, y: 0};
 const MARGIN = 300;
 const GRID_SIZE = 400;
 
-const ZOOM_SPEED_WHEEL = 1.2;
+const ZOOM_SPEED_WHEEL = 1.05;
 const ZOOM_SPEED_BUTTONS = 1.7;
 const MIN_ZOOM = 0.01;
-const HIDE_IMAGES_ZOOM = 0.06;
+const HIDE_IMAGES_ZOOM = 0.1;
 const MAX_ZOOM = 1.3;
 const MOVE_SPEED = 20;
 
@@ -247,13 +247,17 @@ function Viewpager() {
                             style={{
                                 position: "absolute",
                                 top: xys.interpolate((x, y, s) => `${images[i].height * s}px`),
+                                width: xys.interpolate(
+                                    (x, y, s) =>
+                                        `${s > HIDE_IMAGES_ZOOM ? images[i].width * s : 5000}px`
+                                ),
                             }}
                         >
                             {images[i].client}
-                            <LegendSpan xys={xys} cutoff={0.1} text={images[i].year} />
-                            <LegendSpan xys={xys} cutoff={0.2} text={images[i].category} />
-                            <LegendSpan xys={xys} cutoff={0.3} text={images[i].project} />
-                            <LegendSpan xys={xys} cutoff={0.45} text={images[i].description} />
+                            <LegendSpan xys={xys} cutoff={0.3} text={images[i].year} />
+                            <LegendSpan xys={xys} cutoff={0.5} text={images[i].category} />
+                            <LegendSpan xys={xys} cutoff={0.7} text={images[i].project} />
+                            <LegendSpan xys={xys} cutoff={0.9} text={images[i].description} />
                         </animated.div>
                     </animated.div>
                 ))}

@@ -50,10 +50,13 @@ body {
 }
 
 .image-container .legend {
-    margin-top: 15px;
+    margin-top: 12px;
     text-rendering: optimizeSpeed;
-    font-size: 16px;
+    font-size: 14px;
     text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .debug-info {

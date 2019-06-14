@@ -1,6 +1,6 @@
 @font-face {
     font-family: "Picto";
-    src: url("./fonts/picto.eot");
+    /*src: url("./fonts/picto.eot");*/
     src: url("./fonts/picto.eot?#iefix") format("embedded-opentype"),
         url("./fonts/picto.woff2") format("woff2"), url("./fonts/picto.woff") format("woff");
 }
@@ -139,9 +139,9 @@
     padding: 10px;
 }
 
-.menu-title,
-.menu-contact {
-    border-bottom: 1px solid black;
+.menu-contact,
+.menu-filters {
+    border-top: 1px solid black;
 }
 
 .menu .menu-contact .menu-social {
@@ -161,6 +161,13 @@
 .menu-filters-option {
     cursor: pointer;
     padding-left: 20px;
+}
+
+.menu .close-button {
+    cursor: pointer;
+    position: absolute;
+    right: 5px;
+    bottom: 3px;
 }
 
 @media only screen and (max-width: 600px) {

@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useState} from "react";
+import {useSpring, animated} from "react-spring";
 import "./chrome.css";
 
 export function Picto({letter, title}) {
@@ -70,6 +71,13 @@ function MenuFilterOption({filters, name, label, onChange}) {
 }
 
 export function Menu({filters, onFilterClick}) {
+    const [open, setOpen] = useState(true);
+    const {height} = useSpring({
+        from: {height: 0},
+        height: open ? 1 : 0,
+        config: {duration: 200},
+    });
+
     return (
         <div className="chrome menu">
             <div className="menu-section menu-title">
@@ -79,57 +87,71 @@ export function Menu({filters, onFilterClick}) {
                 <br />
                 &mdash; Illustrator
             </div>
-            <div className="menu-section menu-contact">
-                <a target="_blank" rel="noopener noreferrer" href="mailto:louiseillu@yahoo.fr">
-                    louiseillu @yahoo.fr
-                </a>
-                <br />
-                06 52 55 41 18
-                <div className="menu-social">
-                    <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://www.linkedin.com/in/louise-plantin-4b021186/"
-                    >
-                        <Picto letter="F" title="LinkedIn" />
+            <animated.div
+                style={{
+                    height: height.interpolate(height => `${height * 250}px`),
+                    overflow: "hidden",
+                }}
+            >
+                <div className="menu-section menu-contact">
+                    <a target="_blank" rel="noopener noreferrer" href="mailto:louiseillu@yahoo.fr">
+                        louiseillu @yahoo.fr
                     </a>
-                    <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://www.twitter.com/louiseplantin/"
-                    >
-                        <Picto letter="G" title="Twitter" />
-                    </a>
-                    <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="https://www.instagram.com/louise.plantin/"
-                    >
-                        <Picto letter="C" title="Instagram" />
-                    </a>
+                    <br />
+                    06 52 55 41 18
+                    <div className="menu-social">
+                        <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="https://www.linkedin.com/in/louise-plantin-4b021186/"
+                        >
+                            <Picto letter="F" title="LinkedIn" />
+                        </a>
+                        <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="https://www.twitter.com/louiseplantin/"
+                        >
+                            <Picto letter="G" title="Twitter" />
+                        </a>
+                        <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="https://www.instagram.com/louise.plantin/"
+                        >
+                            <Picto letter="C" title="Instagram" />
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div className="menu-section menu-filters">
-                <MenuFilterOption
-                    filters={filters}
-                    name={"Facilitation"}
-                    label={"Facilitation"}
-                    onChange={onFilterClick}
-                />
-                <MenuFilterOption
-                    filters={filters}
-                    name={"Corporate"}
-                    label={"Corporate"}
-                    onChange={onFilterClick}
-                />
-                <MenuFilterOption
-                    filters={filters}
-                    name={"Jeunesse"}
-                    label={"Jeunesse"}
-                    onChange={onFilterClick}
-                />
-            </div>
+                <div className="menu-section menu-filters">
+                    <MenuFilterOption
+                        filters={filters}
+                        name={"Facilitation"}
+                        label={"Facilitation"}
+                        onChange={onFilterClick}
+                    />
+                    <MenuFilterOption
+                        filters={filters}
+                        name={"Corporate"}
+                        label={"Corporate"}
+                        onChange={onFilterClick}
+                    />
+                    <MenuFilterOption
+                        filters={filters}
+                        name={"Jeunesse"}
+                        label={"Jeunesse"}
+                        onChange={onFilterClick}
+                    />
+                </div>
+            </animated.div>
             <div className="menu-collapse" />
+            <animated.div
+                className="close-button"
+                onClick={() => setOpen(!open)}
+                style={{transform: height.interpolate(s => `rotate(${s * 180}deg)`)}}
+            >
+                <Picto letter={"K"} />
+            </animated.div>
         </div>
     );
 }
