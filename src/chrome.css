@@ -1,16 +1,6 @@
-@font-face {
-    font-family: "Picto";
-    /*src: url("./fonts/picto.eot");*/
-    src: url("./fonts/picto.eot?#iefix") format("embedded-opentype"),
-        url("./fonts/picto.woff2") format("woff2"), url("./fonts/picto.woff") format("woff");
-}
-
-.picto {
-    font-family: Picto;
-    text-rendering: geometricPrecision;
-    font-size: 40px;
-    position: relative;
-    bottom: 8px;
+img.picto {
+    width: 24px;
+    shape-rendering: geometricPrecision;
 }
 
 .chrome {
@@ -53,10 +43,10 @@
     border-bottom: 1px solid black;
 }
 .zoom .chrome-button .picto {
-    line-height: 30px;
+    margin: 8px;
 }
 
-.zoom .chrome-button.zoom-language {
+.zoom .chrome-button.zoom-shuffle {
     font-size: 20px;
     line-height: 40px;
     border-bottom: none;
@@ -74,8 +64,14 @@
     display: inline-block;
     width: 50px;
     height: 50px;
-    font-size: 30px;
-    line-height: 44px;
+}
+
+.arrow .arrow-left img.picto,
+.arrow .arrow-right img.picto {
+    width: 30px;
+    margin: 8px;
+    margin-top: 9px;
+    margin-bottom: 7px;
 }
 
 .arrow-left {
@@ -118,11 +114,7 @@
     display: inline-block;
     padding-left: 7px;
     padding-right: 7px;
-    padding-top: 4px;
-}
-
-.chrome-button.chrome-button-search .picto {
-    line-height: 20px;
+    padding-top: 5px;
 }
 
 .chrome.menu {
@@ -144,13 +136,11 @@
     border-top: 1px solid black;
 }
 
-.menu .menu-contact .menu-social {
-    margin-top: -3px;
-}
-
 .menu .menu-contact .menu-social .picto {
+    padding-top: 2px;
     padding-left: 1px;
     padding-right: 9px;
+    width: 28px;
 }
 
 .menu-section.menu-filters {
@@ -163,16 +153,13 @@
     padding-left: 20px;
 }
 
+.menu-filters-option img.picto {
+    width: 16px;
+}
+
 .menu .close-button {
     cursor: pointer;
     position: absolute;
     right: 5px;
     bottom: 3px;
-}
-
-@media only screen and (max-width: 600px) {
-    .menu,
-    .search {
-        display: none;
-    }
 }

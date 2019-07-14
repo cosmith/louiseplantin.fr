@@ -2,19 +2,15 @@ import React, {useState} from "react";
 import {useSpring, animated} from "react-spring";
 import "./chrome.css";
 
-export function Picto({letter, title}) {
-    return (
-        <span className="picto" title={title}>
-            {letter}
-        </span>
-    );
+export function Picto({name, title}) {
+    return <img src={`/icons/${name}.svg`} className="picto" alt={title} />;
 }
 
 export function ZoomButtons({onHomeClick, onZoomClick, onShuffleClick, onLanguageClick}) {
     return (
         <div className="chrome zoom">
             <div className="chrome-button zoom-home" onClick={onHomeClick}>
-                <Picto letter="D" title="home" />
+                <Picto name="home" title="home" />
             </div>
             <div className="chrome-button zoom-plus" onClick={onZoomClick.bind(null, 1)}>
                 +
@@ -23,11 +19,11 @@ export function ZoomButtons({onHomeClick, onZoomClick, onShuffleClick, onLanguag
                 -
             </div>
             <div className="chrome-button zoom-shuffle" onClick={onShuffleClick}>
-                <Picto letter="E" title="shuffle" />
+                <Picto name="shuffle" title="shuffle" />
             </div>
-            <div className="chrome-button zoom-language" onClick={onLanguageClick}>
+            {/*<div className="chrome-button zoom-language" onClick={onLanguageClick}>
                 En
-            </div>
+            </div>*/}
         </div>
     );
 }
@@ -36,10 +32,10 @@ export function ArrowButtons({onClick}) {
     return (
         <div className="chrome arrow">
             <div className="chrome-button arrow-left" onClick={onClick.bind(null, 1)}>
-                <Picto letter="H" title="left" />
+                <Picto name="f-gauche" title="left" />
             </div>
             <div className="chrome-button arrow-right" onClick={onClick.bind(null, -1)}>
-                <Picto letter="I" title="right" />
+                <Picto name="f-droite" title="right" />
             </div>
         </div>
     );
@@ -56,7 +52,7 @@ export function SearchBar({onSearch}) {
                 />
             </div>
             <div className="chrome-button chrome-button-search">
-                <Picto letter="A" title="search" />
+                <Picto name="loupe" title="search" />
             </div>
         </div>
     );
@@ -65,13 +61,13 @@ export function SearchBar({onSearch}) {
 function MenuFilterOption({filters, name, label, onChange}) {
     return (
         <div className="menu-filters-option" onClick={onChange.bind(null, name)}>
-            <Picto letter={filters[name] ? "M" : "L"} /> {label}
+            <Picto name={filters[name] ? "carre-plein" : "carre-vide"} /> {label}
         </div>
     );
 }
 
-export function Menu({filters, onFilterClick}) {
-    const [open, setOpen] = useState(true);
+export function Menu({filters, onFilterClick, initialOpen}) {
+    const [open, setOpen] = useState(initialOpen);
     const {height} = useSpring({
         from: {height: 0},
         height: open ? 1 : 0,
@@ -105,21 +101,28 @@ export function Menu({filters, onFilterClick}) {
                             rel="noopener noreferrer"
                             href="https://www.linkedin.com/in/louise-plantin-4b021186/"
                         >
-                            <Picto letter="F" title="LinkedIn" />
+                            <Picto name="linkedin" title="LinkedIn" />
                         </a>
                         <a
                             target="_blank"
                             rel="noopener noreferrer"
                             href="https://www.twitter.com/louiseplantin/"
                         >
-                            <Picto letter="G" title="Twitter" />
+                            <Picto name="twitter" title="Twitter" />
                         </a>
                         <a
                             target="_blank"
                             rel="noopener noreferrer"
                             href="https://www.instagram.com/louise.plantin/"
                         >
-                            <Picto letter="C" title="Instagram" />
+                            <Picto name="insta" title="Instagram" />
+                        </a>
+                        <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="https://www.malt.fr/profile/louiseplantin"
+                        >
+                            <Picto name="malt" title="Malt" />
                         </a>
                     </div>
                 </div>
@@ -150,7 +153,7 @@ export function Menu({filters, onFilterClick}) {
                 onClick={() => setOpen(!open)}
                 style={{transform: height.interpolate(s => `rotate(${s * 180}deg)`)}}
             >
-                <Picto letter={"K"} />
+                <Picto name={"f-basse"} />
             </animated.div>
         </div>
     );

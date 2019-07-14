@@ -5,6 +5,7 @@
   "homepage": "https://cosmith.github.io/louiseplantin.fr",
   "dependencies": {
     "lodash-es": "^4.17.11",
+    "mobile-detect": "^1.4.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.0",

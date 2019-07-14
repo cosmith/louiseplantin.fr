@@ -3,9 +3,10 @@ import React, {useRef, useState} from "react";
 import {useSprings, animated} from "react-spring";
 import {useGesture} from "react-use-gesture";
 import {clamp, random} from "lodash-es";
+import MobileDetect from "mobile-detect";
 
 import {intersects} from "./utils";
-import {ZoomButtons, ArrowButtons, SearchBar, Menu} from "./chrome";
+import {ZoomButtons, ArrowButtons, Menu} from "./chrome";
 import "./styles.css";
 import images from "./images.json";
 
@@ -16,9 +17,8 @@ const INITIAL_MAP_POSITION = {x: 0, y: 0};
 const MARGIN = 300;
 const GRID_SIZE = 400;
 
-const ZOOM_SPEED_WHEEL = 1.05;
 const ZOOM_SPEED_BUTTONS = 1.7;
-const MIN_ZOOM = 0.01;
+const MIN_ZOOM = 0.05;
 const HIDE_IMAGES_ZOOM = 0.1;
 const MAX_ZOOM = 1.3;
 const MOVE_SPEED = 20;
@@ -121,6 +121,8 @@ function getSourceVariant(s, image) {
     return `url("${image.src}${scale}.jpg")`;
 }
 
+const isMobile = new MobileDetect(window.navigator.userAgent).mobile();
+
 function Viewpager() {
     const zoomLevel = useRef(INITIAL_ZOOM);
     const mapPosition = useRef(INITIAL_MAP_POSITION);
@@ -141,21 +143,22 @@ function Viewpager() {
             setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
         },
         onPinch: ({previous: [previousDistance, previousAngle], da: [distance, angle]}) => {
+            if (!isMobile) {
+                return;
+            }
             const zoomSpeed = Math.pow(distance / previousDistance, 2);
             zoomLevel.current = clamp(zoomLevel.current * zoomSpeed, MIN_ZOOM, MAX_ZOOM);
             setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
         },
         onWheel: ({delta: [xDelta, yDelta]}) => {
-            if (yDelta === 0) {
+            if (isMobile) {
                 return;
             }
-            zoomLevel.current = clamp(
-                yDelta < 0
-                    ? ZOOM_SPEED_WHEEL * zoomLevel.current
-                    : zoomLevel.current / ZOOM_SPEED_WHEEL,
-                MIN_ZOOM,
-                MAX_ZOOM
-            );
+            const WIDTH = 10000;
+
+            const multiplier = 1 - (yDelta * (MAX_ZOOM - MIN_ZOOM)) / WIDTH;
+
+            zoomLevel.current = clamp(zoomLevel.current * multiplier, MIN_ZOOM, MAX_ZOOM);
             setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
         },
     });
@@ -186,7 +189,7 @@ function Viewpager() {
                 }}
             />
             <ArrowButtons onClick={() => {}} />
-            <SearchBar onSearch={() => {}} />
+            {/*<SearchBar onSearch={() => {}} />*/}
             <Menu
                 filters={filters}
                 onFilterClick={filter => {
@@ -195,6 +198,7 @@ function Viewpager() {
                     imagePositions.current = generatePositions(images, newFilters);
                     setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, newFilters));
                 }}
+                initialOpen={!isMobile}
             />
             {/*<animated.div className="debug-info">
                 {propsImages.map(({xys, display}, i) => (
