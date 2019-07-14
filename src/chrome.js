@@ -31,10 +31,10 @@ export function ZoomButtons({onHomeClick, onZoomClick, onShuffleClick, onLanguag
 export function ArrowButtons({onClick}) {
     return (
         <div className="chrome arrow">
-            <div className="chrome-button arrow-left" onClick={onClick.bind(null, 1)}>
+            <div className="chrome-button arrow-left" onClick={onClick.bind(null, -1)}>
                 <Picto name="f-gauche" title="left" />
             </div>
-            <div className="chrome-button arrow-right" onClick={onClick.bind(null, -1)}>
+            <div className="chrome-button arrow-right" onClick={onClick.bind(null, 1)}>
                 <Picto name="f-droite" title="right" />
             </div>
         </div>

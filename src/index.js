@@ -128,6 +128,7 @@ function Viewpager() {
     const mapPosition = useRef(INITIAL_MAP_POSITION);
     const [filters, setFilters] = useState(INITIAL_FILTERS);
     const imagePositions = useRef(generatePositions(images, filters));
+    const [selectedImageIndex, setSelectedImageIndex] = useState(null);
 
     const [propsImages, setImages] = useSprings(
         images.length,
@@ -188,7 +189,28 @@ function Viewpager() {
                     setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
                 }}
             />
-            <ArrowButtons onClick={() => {}} />
+            <ArrowButtons
+                onClick={direction => {
+                    const newIndex = clamp(
+                        selectedImageIndex === null ? 0 : selectedImageIndex + direction,
+                        0,
+                        imagePositions.current.length
+                    );
+                    const imagePos = imagePositions.current[newIndex];
+                    const image = images[newIndex];
+                    setSelectedImageIndex(newIndex);
+
+                    zoomLevel.current = Math.min(
+                        window.innerWidth / (image.width + MARGIN / 2),
+                        window.innerHeight / (image.height + MARGIN / 2)
+                    );
+                    mapPosition.current = {
+                        x: -imagePos[0] - image.width / 2,
+                        y: -imagePos[1] - image.height / 2,
+                    };
+                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+                }}
+            />
             {/*<SearchBar onSearch={() => {}} />*/}
             <Menu
                 filters={filters}
