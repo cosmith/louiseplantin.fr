@@ -3,7 +3,7 @@ import {useSpring, animated} from "react-spring";
 import "./chrome.css";
 
 export function Picto({name, title}) {
-    return <img src={`/icons/${name}.svg`} className="picto" alt={title} />;
+    return <img src={`./icons/${name}.svg`} className="picto" alt={title} />;
 }
 
 export function ZoomButtons({onHomeClick, onZoomClick, onShuffleClick, onLanguageClick}) {
