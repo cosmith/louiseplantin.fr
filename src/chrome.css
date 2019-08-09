@@ -4,7 +4,7 @@ img.picto {
 }
 
 .chrome {
-    box-shadow: 0 3px 8px 0px rgba(50, 50, 73, 0.28);
+    box-shadow: 0 3px 8px 0px rgba(0, 0, 0, 0.12);
     position: absolute;
     z-index: 10;
     background: white;
@@ -19,7 +19,7 @@ img.picto {
 }
 
 .chrome a:hover {
-    color: blue;
+    color: black;
 }
 
 .chrome-button {
@@ -162,4 +162,8 @@ img.picto {
     position: absolute;
     right: 5px;
     bottom: 3px;
+}
+
+.menu .close-button img.picto {
+    width: 19px;
 }

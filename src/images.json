@@ -96,18 +96,6 @@
         "number": "2"
     },
     {
-        "src": "./thumbs/Jeunesse/Police_nationale|2018|Magazine_Liaisons|Sacha_&_Juliette|6",
-        "width": 1200,
-        "height": 858,
-        "category": "Jeunesse",
-        "filter": "Jeunesse",
-        "client": "Police nationale",
-        "year": "2018",
-        "project": "Magazine Liaisons",
-        "description": "Sacha & Juliette",
-        "number": "6"
-    },
-    {
         "src": "./thumbs/Jeunesse/Attraction_Communication|2018|Livret_Familles|Gestes",
         "width": 848,
         "height": 1200,
@@ -156,18 +144,6 @@
         "number": "4"
     },
     {
-        "src": "./thumbs/Jeunesse/Police_nationale|2018|Magazine_Liaisons|Sacha_&_Juliette|9",
-        "width": 1200,
-        "height": 849,
-        "category": "Jeunesse",
-        "filter": "Jeunesse",
-        "client": "Police nationale",
-        "year": "2018",
-        "project": "Magazine Liaisons",
-        "description": "Sacha & Juliette",
-        "number": "9"
-    },
-    {
         "src": "./thumbs/Jeunesse/Projet_Personnel|2016|Fanzine|Zelie_&_Ferdinand|1",
         "width": 849,
         "height": 1200,
@@ -190,18 +166,6 @@
         "project": "Livret Familles",
         "description": "Petite fille et grand pe\u0300re",
         "number": 0
-    },
-    {
-        "src": "./thumbs/Jeunesse/Police_nationale|2018|Magazine_Liaisons|Sacha_&_Juliette|8",
-        "width": 848,
-        "height": 1200,
-        "category": "Jeunesse",
-        "filter": "Jeunesse",
-        "client": "Police nationale",
-        "year": "2018",
-        "project": "Magazine Liaisons",
-        "description": "Sacha & Juliette",
-        "number": "8"
     },
     {
         "src": "./thumbs/Jeunesse/Projet_Personnel|2016|Fanzine|Zelie_&_Ferdinand|2",
@@ -288,42 +252,6 @@
         "number": "0"
     },
     {
-        "src": "./thumbs/Jeunesse/Police_nationale|2018|Magazine_Liaisons|Sacha_&_Juliette|11",
-        "width": 1194,
-        "height": 1200,
-        "category": "Jeunesse",
-        "filter": "Jeunesse",
-        "client": "Police nationale",
-        "year": "2018",
-        "project": "Magazine Liaisons",
-        "description": "Sacha & Juliette",
-        "number": "11"
-    },
-    {
-        "src": "./thumbs/Jeunesse/Police_nationale|2018|Magazine_Liaisons|Sacha_&_Juliette|10",
-        "width": 1500,
-        "height": 1071,
-        "category": "Jeunesse",
-        "filter": "Jeunesse",
-        "client": "Police nationale",
-        "year": "2018",
-        "project": "Magazine Liaisons",
-        "description": "Sacha & Juliette",
-        "number": "10"
-    },
-    {
-        "src": "./thumbs/Corporate/La_Bonne_Pioche|2016|Charte_graphique|Carte_de_visite",
-        "width": 1000,
-        "height": 688,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "La Bonne Pioche",
-        "year": "2016",
-        "project": "Charte graphique",
-        "description": "Carte de visite",
-        "number": 0
-    },
-    {
         "src": "./thumbs/Corporate/Equo_Vivo|2018|Affichage_chantier|Panneau_didactique|3",
         "width": 1200,
         "height": 921,
@@ -360,18 +288,6 @@
         "number": 0
     },
     {
-        "src": "./thumbs/Corporate/Decathlon|2017|Projet_magasin|Esprit_du_groupe",
-        "width": 1200,
-        "height": 675,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "De\u0301cathlon",
-        "year": "2017",
-        "project": "Projet magasin",
-        "description": "Esprit du groupe",
-        "number": 0
-    },
-    {
         "src": "./thumbs/Corporate/Equo_Vivo|2018|Affichage_chantier|Panneau_didactique|1",
         "width": 1200,
         "height": 921,
@@ -384,54 +300,6 @@
         "number": "1"
     },
     {
-        "src": "./thumbs/Corporate/Leonard|2017|Infographie|My_Vinci_Start-up",
-        "width": 1200,
-        "height": 833,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Le\u0301onard",
-        "year": "2017",
-        "project": "Infographie",
-        "description": "My Vinci Start-up",
-        "number": 0
-    },
-    {
-        "src": "./thumbs/Corporate/Equo_Vivo|2018|Affichage_chantier|Panneau_didactique|4",
-        "width": 1200,
-        "height": 921,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Equo Vivo",
-        "year": "2018",
-        "project": "Affichage chantier",
-        "description": "Panneau didactique",
-        "number": "4"
-    },
-    {
-        "src": "./thumbs/Corporate/Le_Comptoir_Belge|2017|Mascotte|1",
-        "width": 800,
-        "height": 600,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Le Comptoir Belge",
-        "year": "2017",
-        "project": "Mascotte",
-        "description": "1",
-        "number": 0
-    },
-    {
-        "src": "./thumbs/Corporate/Le_Comptoir_Belge|2017|Mascotte|2",
-        "width": 800,
-        "height": 600,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Le Comptoir Belge",
-        "year": "2017",
-        "project": "Mascotte",
-        "description": "2",
-        "number": 0
-    },
-    {
         "src": "./thumbs/Corporate/Mairie_de_Saint-Denis|2018|Fete_des_Tulipes|Charte_graphique|1",
         "width": 801,
         "height": 1200,
@@ -442,30 +310,6 @@
         "project": "Fe\u0302te des Tulipes",
         "description": "Charte graphique",
         "number": "1"
-    },
-    {
-        "src": "./thumbs/Corporate/La_Bonne_Pioche|2017|Charte_graphique|Fiche_Recette",
-        "width": 867,
-        "height": 1200,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "La Bonne Pioche",
-        "year": "2017",
-        "project": "Charte graphique",
-        "description": "Fiche Recette",
-        "number": 0
-    },
-    {
-        "src": "./thumbs/Corporate/Decathlon|2016|Presentation_de_la_vision_magasin|Vision_magasin",
-        "width": 1200,
-        "height": 800,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "De\u0301cathlon",
-        "year": "2016",
-        "project": "Pr\u00e9sentation de la vision magasin",
-        "description": "Vision magasin",
-        "number": 0
     },
     {
         "src": "./thumbs/Corporate/Mairie_de_Saint-Denis|2018|Fete_des_Tulipes|Charte_graphique|0",
@@ -492,18 +336,6 @@
         "number": "1"
     },
     {
-        "src": "./thumbs/Corporate/Nodi|2019|Projet_Geneste|Recit_d'ambiance_pour_presenter_un_projet_d'ecoquartier_a_Bordeaux|3",
-        "width": 1200,
-        "height": 900,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Nodi",
-        "year": "2019",
-        "project": "Projet Geneste",
-        "description": "R\u00e9cit d\u2019ambiance pour pr\u00e9senter un projet d\u2019\u00e9coquartier \u00e0 Bordeaux",
-        "number": "3"
-    },
-    {
         "src": "./thumbs/Corporate/Mairie_de_Saint-Denis|2018|Fete_des_Tulipes|Charte_graphique|2",
         "width": 1000,
         "height": 1000,
@@ -528,18 +360,6 @@
         "number": "3"
     },
     {
-        "src": "./thumbs/Corporate/Leonard|2019|Reunion_prospective|Croquis_de_visualisation_d'un_croisement",
-        "width": 1200,
-        "height": 900,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Le\u0301onard",
-        "year": "2019",
-        "project": "R\u00e9union prospective",
-        "description": "Croquis de visualisation d\u2019un croisement",
-        "number": 0
-    },
-    {
         "src": "./thumbs/Corporate/Nodi|2019|Projet_Geneste|Recit_d'ambiance_pour_presenter_un_projet_d'ecoquartier_a_Bordeaux|2",
         "width": 1200,
         "height": 900,
@@ -550,18 +370,6 @@
         "project": "Projet Geneste",
         "description": "R\u00e9cit d\u2019ambiance pour pr\u00e9senter un projet d\u2019\u00e9coquartier \u00e0 Bordeaux",
         "number": "2"
-    },
-    {
-        "src": "./thumbs/Corporate/Decathlon|2017|Projet_Mondeville|Vision_du_site",
-        "width": 1200,
-        "height": 675,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "De\u0301cathlon",
-        "year": "2017",
-        "project": "Projet Mondeville",
-        "description": "Vision du site",
-        "number": 0
     },
     {
         "src": "./thumbs/Corporate/Particulier|2018|Curriculum_Vitae|Infographie",
@@ -588,42 +396,6 @@
         "number": 0
     },
     {
-        "src": "./thumbs/Corporate/Mairie_de_Saint-Denis|2018|Fete_des_Tulipes|Reportage_dessine_pendant_la_fete_des_Tulipes",
-        "width": 1200,
-        "height": 957,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Mairie de Saint-Denis",
-        "year": "2018",
-        "project": "Fe\u0302te des Tulipes",
-        "description": "Reportage dessin\u00e9 pendant la f\u00eate des Tulipes",
-        "number": 0
-    },
-    {
-        "src": "./thumbs/Corporate/La_Bonne_Pioche|2017|Charte_graphique|Illustration_Saint_Valentin",
-        "width": 1200,
-        "height": 1018,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "La Bonne Pioche",
-        "year": "2017",
-        "project": "Charte graphique",
-        "description": "Illustration Saint Valentin",
-        "number": 0
-    },
-    {
-        "src": "./thumbs/Corporate/Equo_Vivo|2018|Calendrier_corporate|Semestre_2",
-        "width": 1000,
-        "height": 782,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Equo Vivo",
-        "year": "2018",
-        "project": "Calendrier corporate",
-        "description": "Semestre 2",
-        "number": 0
-    },
-    {
         "src": "./thumbs/Corporate/Mairie_de_Saint-Denis|2018|Fete_des_Tulipes|Charte_graphique|4",
         "width": 1200,
         "height": 801,
@@ -634,54 +406,6 @@
         "project": "Fe\u0302te des Tulipes",
         "description": "Charte graphique",
         "number": "4"
-    },
-    {
-        "src": "./thumbs/Corporate/Mairie_de_Saint-Denis|2018|Fete_des_Tulipes|Illustration",
-        "width": 1200,
-        "height": 800,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Mairie de Saint-Denis",
-        "year": "2018",
-        "project": "F\u00eate des Tulipes",
-        "description": "Illustration",
-        "number": 0
-    },
-    {
-        "src": "./thumbs/Corporate/Mairie_de_Saint-Denis|2018|Fete_des_Tulipes|Charte_graphique|5",
-        "width": 1200,
-        "height": 801,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Mairie de Saint-Denis",
-        "year": "2018",
-        "project": "Fe\u0302te des Tulipes",
-        "description": "Charte graphique",
-        "number": "5"
-    },
-    {
-        "src": "./thumbs/Corporate/Nodi|2019|Projet_Geneste|Recit_d'ambiance_pour_presenter_un_projet_d'ecoquartier_a_Bordeaux|4",
-        "width": 1200,
-        "height": 900,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Nodi",
-        "year": "2019",
-        "project": "Projet Geneste",
-        "description": "R\u00e9cit d\u2019ambiance pour pr\u00e9senter un projet d\u2019\u00e9coquartier \u00e0 Bordeaux",
-        "number": "4"
-    },
-    {
-        "src": "./thumbs/Corporate/Equo_Vivo|2018|Calendrier_corporate|Semestre_1",
-        "width": 1000,
-        "height": 782,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Equo Vivo",
-        "year": "2018",
-        "project": "Calendrier corporate",
-        "description": "Semestre 1",
-        "number": 0
     },
     {
         "src": "./thumbs/Corporate/Ministere_de_la_sante_et_des_solidarites|2018|Prospective_retraites_2040|Recit_en_bande_dessinee_imaginant_la_reforme_des_retraites|2",
@@ -706,18 +430,6 @@
         "project": "Pr\u00e9sentation de la vision magasin",
         "description": "Salle d\u2019escalade",
         "number": 0
-    },
-    {
-        "src": "./thumbs/Corporate/Ministere_de_la_sante_et_des_solidarites|2018|Prospective_retraites_2040|Recit_en_bande_dessinee_imaginant_la_reforme_des_retraites|3",
-        "width": 848,
-        "height": 1200,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Ministe\u0300re de la sante\u0301 et des solidarite\u0301s",
-        "year": "2018",
-        "project": "Prospective retraites 2040",
-        "description": "R\u00e9cit en bande dessin\u00e9e imaginant la r\u00e9forme des retraites",
-        "number": "3"
     },
     {
         "src": "./thumbs/Corporate/Vinci_Autoroutes|2019|Exposition_New_Deal|Illustrations_presentant_une_vision_prospective_de_l'amenagement_des_autoroutes_du_Grand_Paris_en_2030-2050|1",
@@ -780,18 +492,6 @@
         "number": 0
     },
     {
-        "src": "./thumbs/Corporate/Decathlon|2017|Presentation_reunion|Collectif_immobilier",
-        "width": 1200,
-        "height": 594,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "De\u0301cathlon",
-        "year": "2017",
-        "project": "Pr\u00e9sentation r\u00e9union",
-        "description": "Collectif immobilier",
-        "number": 0
-    },
-    {
         "src": "./thumbs/Corporate/Babbel|2019|Babbel_magazine|Article_sur_le_vocabulaire",
         "width": 1200,
         "height": 675,
@@ -802,30 +502,6 @@
         "project": "Babbel magazine",
         "description": "Article sur le vocabulaire",
         "number": 0
-    },
-    {
-        "src": "./thumbs/Corporate/Babbel|2019|Babbel_magazine|Article_sur_les_expressions_idiomatiques",
-        "width": 1200,
-        "height": 675,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Babbel",
-        "year": "2019",
-        "project": "Babbel magazine",
-        "description": "Article sur les expressions idiomatiques",
-        "number": 0
-    },
-    {
-        "src": "./thumbs/Corporate/Equo_Vivo|2018|Affichage_chantier|Panneau_didactique|8",
-        "width": 2381,
-        "height": 1828,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Equo Vivo",
-        "year": "2018",
-        "project": "Affichage chantier",
-        "description": "Panneau didactique",
-        "number": "8"
     },
     {
         "src": "./thumbs/Corporate/Decathlon|2016|Presentation_de_la_vision_magasin|Le_match",

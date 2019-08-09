@@ -142,7 +142,7 @@ export function Menu({filters, onFilterClick, initialOpen}) {
                     <MenuFilterOption
                         filters={filters}
                         name={"Jeunesse"}
-                        label={"Jeunesse"}
+                        label={"Children"}
                         onChange={onFilterClick}
                     />
                 </div>

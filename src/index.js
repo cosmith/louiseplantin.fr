@@ -2,13 +2,15 @@ import {render} from "react-dom";
 import React, {useRef, useState} from "react";
 import {useSprings, animated} from "react-spring";
 import {useGesture} from "react-use-gesture";
-import {clamp, random} from "lodash-es";
+import {clamp, random, shuffle} from "lodash-es";
 import MobileDetect from "mobile-detect";
 
 import {intersects} from "./utils";
 import {ZoomButtons, ArrowButtons, Menu} from "./chrome";
 import "./styles.css";
-import images from "./images.json";
+import originalImages from "./images.json";
+
+const images = shuffle(originalImages);
 
 const INITIAL_ZOOM = 0.2;
 const INITIAL_FILTERS = {Facilitation: true, Corporate: true, Jeunesse: true};
@@ -194,16 +196,25 @@ function Viewpager() {
                     const newIndex = clamp(
                         selectedImageIndex === null ? 0 : selectedImageIndex + direction,
                         0,
-                        imagePositions.current.length
+                        imagePositions.current.length - 1
                     );
+
                     const imagePos = imagePositions.current[newIndex];
                     const image = images[newIndex];
                     setSelectedImageIndex(newIndex);
 
-                    zoomLevel.current = Math.min(
-                        window.innerWidth / (image.width + MARGIN / 2),
-                        window.innerHeight / (image.height + MARGIN / 2)
-                    );
+                    if (image.width > image.height) {
+                        zoomLevel.current = Math.max(
+                            window.innerWidth / (image.width - 10),
+                            window.innerHeight / (image.height - 10)
+                        );
+                    } else {
+                        zoomLevel.current = Math.min(
+                            window.innerWidth / (image.width - 10),
+                            window.innerHeight / (image.height - 10)
+                        );
+                    }
+
                     mapPosition.current = {
                         x: -imagePos[0] - image.width / 2,
                         y: -imagePos[1] - image.height / 2,
@@ -263,8 +274,8 @@ function Viewpager() {
                                 backgroundImage: xys.interpolate((x, y, s) =>
                                     getSourceVariant(s, images[i])
                                 ),
-                                display: xys.interpolate((x, y, s) =>
-                                    s > HIDE_IMAGES_ZOOM ? "inherit" : "none"
+                                opacity: xys.interpolate((x, y, s) =>
+                                    s > HIDE_IMAGES_ZOOM ? 1 : s * (HIDE_IMAGES_ZOOM - MIN_ZOOM)
                                 ),
                             }}
                         />
