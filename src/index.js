@@ -111,8 +111,8 @@ function showImage(x, y, s, image, mapPosition) {
 
 function getSourceVariant(s, image) {
     let scale;
-    if (s > 0.8) {
-        scale = "@original";
+    if (s > 1) {
+        scale = "@4x";
     } else if (s > 0.4) {
         scale = "@3x";
     } else if (s > 0.1) {
@@ -166,8 +166,48 @@ function Viewpager() {
         },
     });
 
+    const handleZoom = direction => {
+        zoomLevel.current = clamp(
+            direction > 0
+                ? ZOOM_SPEED_BUTTONS * zoomLevel.current
+                : zoomLevel.current / ZOOM_SPEED_BUTTONS,
+            MIN_ZOOM,
+            MAX_ZOOM
+        );
+        setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+    };
+
+    const handleZoomToImageIndex = index => {
+        const imagePos = imagePositions.current[index];
+        const image = images[index];
+        setSelectedImageIndex(index);
+
+        if (image.width > image.height) {
+            zoomLevel.current = Math.max(
+                window.innerWidth / (image.width - 10),
+                window.innerHeight / (image.height - 10)
+            );
+        } else {
+            zoomLevel.current = Math.min(
+                window.innerWidth / (image.width - 10),
+                window.innerHeight / (image.height - 10)
+            );
+        }
+
+        mapPosition.current = {
+            x: -imagePos[0] - image.width / 2,
+            y: -imagePos[1] - image.height / 2,
+        };
+        setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+    };
+
     return (
-        <div {...bind()} id="container" className="touch-drag touch-zoom">
+        <div
+            {...bind()}
+            id="container"
+            className="touch-drag touch-zoom"
+            onDoubleClick={handleZoom.bind(null, 1)}
+        >
             <ZoomButtons
                 onHomeClick={() => {
                     zoomLevel.current = INITIAL_ZOOM;
@@ -176,16 +216,7 @@ function Viewpager() {
                     imagePositions.current = generatePositions(images, INITIAL_FILTERS);
                     setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
                 }}
-                onZoomClick={direction => {
-                    zoomLevel.current = clamp(
-                        direction > 0
-                            ? ZOOM_SPEED_BUTTONS * zoomLevel.current
-                            : zoomLevel.current / ZOOM_SPEED_BUTTONS,
-                        MIN_ZOOM,
-                        MAX_ZOOM
-                    );
-                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
-                }}
+                onZoomClick={handleZoom}
                 onShuffleClick={() => {
                     imagePositions.current = generatePositions(images, filters);
                     setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
@@ -193,33 +224,13 @@ function Viewpager() {
             />
             <ArrowButtons
                 onClick={direction => {
-                    const newIndex = clamp(
-                        selectedImageIndex === null ? 0 : selectedImageIndex + direction,
-                        0,
-                        imagePositions.current.length - 1
-                    );
-
-                    const imagePos = imagePositions.current[newIndex];
-                    const image = images[newIndex];
-                    setSelectedImageIndex(newIndex);
-
-                    if (image.width > image.height) {
-                        zoomLevel.current = Math.max(
-                            window.innerWidth / (image.width - 10),
-                            window.innerHeight / (image.height - 10)
-                        );
-                    } else {
-                        zoomLevel.current = Math.min(
-                            window.innerWidth / (image.width - 10),
-                            window.innerHeight / (image.height - 10)
-                        );
+                    let newIndex =
+                        selectedImageIndex === null ? 0 : selectedImageIndex + direction;
+                    while (!filters[images[newIndex].filter]) {
+                        newIndex = (newIndex + direction) % (images.length - 1);
                     }
 
-                    mapPosition.current = {
-                        x: -imagePos[0] - image.width / 2,
-                        y: -imagePos[1] - image.height / 2,
-                    };
-                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+                    handleZoomToImageIndex(newIndex);
                 }}
             />
             {/*<SearchBar onSearch={() => {}} />*/}
@@ -228,6 +239,8 @@ function Viewpager() {
                 onFilterClick={filter => {
                     const newFilters = {...filters, [filter]: !filters[filter]};
                     setFilters(newFilters);
+                    setSelectedImageIndex(0);
+                    zoomLevel.current = INITIAL_ZOOM;
                     imagePositions.current = generatePositions(images, newFilters);
                     setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, newFilters));
                 }}
@@ -275,9 +288,15 @@ function Viewpager() {
                                     getSourceVariant(s, images[i])
                                 ),
                                 opacity: xys.interpolate((x, y, s) =>
-                                    s > HIDE_IMAGES_ZOOM ? 1 : s * (HIDE_IMAGES_ZOOM - MIN_ZOOM)
+                                    s > HIDE_IMAGES_ZOOM
+                                        ? 1
+                                        : s / (HIDE_IMAGES_ZOOM - MIN_ZOOM) - 1
+                                ),
+                                boxShadow: xys.interpolate(
+                                    (x, y, s) => `0 4px ${14 / s}px 0px rgb(208, 208, 208)`
                                 ),
                             }}
+                            onMouseDown={handleZoomToImageIndex.bind(null, i)}
                         />
                         <animated.div
                             className="legend"

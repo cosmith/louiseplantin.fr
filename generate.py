@@ -18,7 +18,7 @@ def get_parts(filename):
     elif len(parts) == 5:
         [client, year, project, description, number] = parts
     else:
-        raise ValueError(f"invalid file name {filename}")
+        raise ValueError(f"invalid file name {name} (path: {filename})")
 
     return {
         "client": client,
@@ -33,13 +33,20 @@ def save_thumbnails(filepath):
     path_no_ext = os.path.splitext(filepath)[0]
     path = unidecode(path_no_ext).replace("/images/", "/thumbs/").replace(" ", "_")
 
-    for size, number in ((200, 1), (500, 2), (1000, 3)):
+    MAX_SIZE = 3500
+    image = Image.open(filepath)
+    max_image_size = min(MAX_SIZE, max(image.width, image.height))
+
+    for ratio, number in ((0.1, 1), (0.4, 2), (0.7, 3), (1, 4)):
         image = Image.open(filepath)
+        size = max_image_size * ratio
         image.thumbnail((size, size), Image.ANTIALIAS)
         image.convert("RGB").save(f"{path}@{number}x.jpg", "jpeg")
 
-    image = Image.open(filepath)
-    image.convert("RGB").save(f"{path}@original.jpg", "jpeg")  # original size
+    # # max size
+    # image = Image.open(filepath)
+    # image.thumbnail((MAX_SIZE, MAX_SIZE), Image.ANTIALIAS)
+    # image.convert("RGB").save(f"{path}@original.jpg", "jpeg")  # original size
     return image.size, path
 
 

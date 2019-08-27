@@ -28,6 +28,7 @@ body {
 
 #map {
     height: 100%;
+    pointer-events: none;
 }
 
 .image {
@@ -39,6 +40,7 @@ body {
 .image-container {
     position: absolute;
     will-change: transform;
+    pointer-events: none;
 }
 
 .image-container .image {
@@ -46,7 +48,8 @@ body {
     background-repeat: no-repeat;
     background-position: center center;
     will-change: width, height;
-    box-shadow: 0 4px 14px 0px rgb(208, 208, 208);
+    cursor: pointer;
+    pointer-events: auto;
 }
 
 .image-container .legend {
