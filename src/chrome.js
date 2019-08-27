@@ -79,9 +79,9 @@ export function Menu({filters, onFilterClick, initialOpen}) {
             <div className="menu-section menu-title">
                 Louise Plantin
                 <br />
-                Graphic facilitator
+                Scribing
                 <br />
-                &mdash; Illustrator
+                &mdash; Illustration
             </div>
             <animated.div
                 style={{

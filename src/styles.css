@@ -55,7 +55,7 @@ body {
 .image-container .legend {
     margin-top: 12px;
     text-rendering: optimizeSpeed;
-    font-size: 14px;
+    font-size: 14px !important;
     text-transform: uppercase;
     white-space: nowrap;
     overflow: hidden;
