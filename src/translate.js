@@ -20,7 +20,7 @@ const TRANSLATIONS = {
     fr: {
         "Facilitation graphique": "Facilitation graphique",
         Illustration: "Illustration",
-        Facilitation: "Facilitation",
+        Facilitation: "Scribing",
         Corporate: "Corporate",
         Jeunesse: "Jeunesse",
     },
