@@ -20,7 +20,7 @@ const MARGIN = 300;
 const GRID_SIZE = 400;
 
 const ZOOM_SPEED_BUTTONS = 1.7;
-const MIN_ZOOM = 0.05;
+const MIN_ZOOM = 0.04;
 const HIDE_IMAGES_ZOOM = 0.1;
 const MAX_ZOOM = 1.3;
 const MOVE_SPEED = 20;
@@ -305,7 +305,7 @@ function Viewpager() {
                                 top: xys.interpolate((x, y, s) => `${images[i].height * s}px`),
                                 width: xys.interpolate(
                                     (x, y, s) =>
-                                        `${s > HIDE_IMAGES_ZOOM ? images[i].width * s : 5000}px`
+                                        `${s > HIDE_IMAGES_ZOOM ? images[i].width * s : 1000}px`
                                 ),
                             }}
                         >

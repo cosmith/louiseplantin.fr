@@ -29,13 +29,15 @@ def get_parts(filename):
     }
 
 
-def save_thumbnails(filepath):
+def save_thumbnails(filepath, category):
     path_no_ext = os.path.splitext(filepath)[0]
     path = unidecode(path_no_ext).replace("/images/", "/thumbs/").replace(" ", "_")
 
-    MAX_SIZE = 3500
+    MAX_SIZE = 2500 if category == "Facilitation" else 1500
     image = Image.open(filepath)
-    max_image_size = min(MAX_SIZE, max(image.width, image.height))
+    original_image_size = max(image.width, image.height)
+    max_image_size = min(MAX_SIZE, original_image_size)
+    # print(f"original size: {original_image_size}, max size: {max_image_size}")
 
     for ratio, number in ((0.1, 1), (0.4, 2), (0.7, 3), (1, 4)):
         image = Image.open(filepath)
@@ -62,7 +64,7 @@ if __name__ == "__main__":
 
                 parts = get_parts(filename)
                 filepath = root + "/" + filename
-                (width, height), src = save_thumbnails(filepath)
+                (width, height), src = save_thumbnails(filepath, category)
 
                 filelist.append(
                     dict(

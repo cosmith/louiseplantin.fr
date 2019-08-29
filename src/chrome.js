@@ -79,7 +79,7 @@ export function Menu({filters, onFilterClick, initialOpen}) {
             <div className="menu-section menu-title">
                 Louise Plantin
                 <br />
-                Scribing
+                Facilitation graphique
                 <br />
                 &mdash; Illustration
             </div>
@@ -130,7 +130,7 @@ export function Menu({filters, onFilterClick, initialOpen}) {
                     <MenuFilterOption
                         filters={filters}
                         name={"Facilitation"}
-                        label={"Facilitation"}
+                        label={"Scribing"}
                         onChange={onFilterClick}
                     />
                     <MenuFilterOption
