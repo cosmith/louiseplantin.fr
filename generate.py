@@ -33,16 +33,15 @@ def save_thumbnails(filepath, category):
     path_no_ext = os.path.splitext(filepath)[0]
     path = unidecode(path_no_ext).replace("/images/", "/thumbs/").replace(" ", "_")
 
-    MAX_SIZE = 2500 if category == "Facilitation" else 1500
+    max_size = 3500 if category == "Facilitation" else 1500
     image = Image.open(filepath)
-    original_image_size = max(image.width, image.height)
-    max_image_size = min(MAX_SIZE, original_image_size)
-    # print(f"original size: {original_image_size}, max size: {max_image_size}")
+    original_image_size = max(*image.size)
 
     for ratio, number in ((0.1, 1), (0.4, 2), (0.7, 3), (1, 4)):
         image = Image.open(filepath)
-        size = max_image_size * ratio
-        image.thumbnail((size, size), Image.ANTIALIAS)
+        factor = max_size / original_image_size * ratio
+        new_size = (round(image.width * factor), round(image.height * factor))
+        image = image.resize(new_size, Image.ANTIALIAS)
         image.convert("RGB").save(f"{path}@{number}x.jpg", "jpeg")
 
     return image.size, path
