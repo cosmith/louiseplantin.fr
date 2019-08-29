@@ -45,10 +45,6 @@ def save_thumbnails(filepath, category):
         image.thumbnail((size, size), Image.ANTIALIAS)
         image.convert("RGB").save(f"{path}@{number}x.jpg", "jpeg")
 
-    # # max size
-    # image = Image.open(filepath)
-    # image.thumbnail((MAX_SIZE, MAX_SIZE), Image.ANTIALIAS)
-    # image.convert("RGB").save(f"{path}@original.jpg", "jpeg")  # original size
     return image.size, path
 
 
