@@ -1,6 +1,9 @@
 import React, {useState} from "react";
 import {useSpring, animated} from "react-spring";
+import {getTranslations} from "./translate";
 import "./chrome.css";
+
+const translations = getTranslations();
 
 export function Picto({name, title}) {
     return <img src={`./icons/${name}.svg`} className="picto" alt={title} />;
@@ -79,9 +82,9 @@ export function Menu({filters, onFilterClick, initialOpen}) {
             <div className="menu-section menu-title">
                 Louise Plantin
                 <br />
-                Facilitation graphique
+                {translations["Facilitation graphique"]}
                 <br />
-                &mdash; Illustration
+                &mdash; {translations["Illustration"]}
             </div>
             <animated.div
                 style={{
@@ -130,19 +133,19 @@ export function Menu({filters, onFilterClick, initialOpen}) {
                     <MenuFilterOption
                         filters={filters}
                         name={"Facilitation"}
-                        label={"Scribing"}
+                        label={translations["Facilitation"]}
                         onChange={onFilterClick}
                     />
                     <MenuFilterOption
                         filters={filters}
                         name={"Corporate"}
-                        label={"Corporate"}
+                        label={translations["Corporate"]}
                         onChange={onFilterClick}
                     />
                     <MenuFilterOption
                         filters={filters}
                         name={"Jeunesse"}
-                        label={"Children"}
+                        label={translations["Jeunesse"]}
                         onChange={onFilterClick}
                     />
                 </div>
