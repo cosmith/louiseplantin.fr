@@ -1,3 +1,9 @@
+@media screen and (max-device-width: 480px) {
+    body {
+        -webkit-text-size-adjust: none;
+    }
+}
+
 img.picto {
     width: 24px;
     shape-rendering: geometricPrecision;
@@ -121,7 +127,6 @@ img.picto {
     left: 20px;
     top: 0px;
     text-align: left;
-    padding-top: 10px;
     font-size: 22px;
     line-height: 24px;
 }
@@ -129,6 +134,10 @@ img.picto {
 .menu .menu-section {
     width: 200px;
     padding: 10px;
+}
+
+.menu .menu-section.menu-subtitle {
+    padding-top: 0;
 }
 
 .menu-contact,

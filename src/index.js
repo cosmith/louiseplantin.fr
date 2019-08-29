@@ -244,7 +244,7 @@ function Viewpager() {
                     imagePositions.current = generatePositions(images, newFilters);
                     setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, newFilters));
                 }}
-                initialOpen={!isMobile}
+                isMobile={isMobile}
             />
             {/*<animated.div className="debug-info">
                 {propsImages.map(({xys, display}, i) => (

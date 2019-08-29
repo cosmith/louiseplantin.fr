@@ -69,29 +69,31 @@ function MenuFilterOption({filters, name, label, onChange}) {
     );
 }
 
-export function Menu({filters, onFilterClick, initialOpen}) {
-    const [open, setOpen] = useState(initialOpen);
-    const {height} = useSpring({
+export function Menu({filters, onFilterClick, isMobile}) {
+    const [open, setOpen] = useState(!isMobile);
+    const closedHeight = isMobile ? 0 : 82;
+    const {height, angle} = useSpring({
         from: {height: 0},
-        height: open ? 1 : 0,
+        height: open ? 320 : closedHeight,
+        angle: open ? 1 : 0,
         config: {duration: 200},
     });
 
     return (
         <div className="chrome menu">
-            <div className="menu-section menu-title">
-                Louise Plantin
-                <br />
-                {translations["Facilitation graphique"]}
-                <br />
-                &mdash; {translations["Illustration"]}
-            </div>
+            <div className="menu-section menu-title">Louise Plantin</div>
             <animated.div
                 style={{
-                    height: height.interpolate(height => `${height * 250}px`),
+                    height: height.interpolate(height => `${height}px`),
                     overflow: "hidden",
                 }}
             >
+                <div className="menu-section menu-subtitle">
+                    {translations["Facilitation graphique"]}
+                    <br />
+                    &mdash; {translations["Illustration"]}
+                </div>
+
                 <div className="menu-section menu-contact">
                     <a target="_blank" rel="noopener noreferrer" href="mailto:louiseillu@yahoo.fr">
                         louiseillu @yahoo.fr
@@ -154,7 +156,7 @@ export function Menu({filters, onFilterClick, initialOpen}) {
             <animated.div
                 className="close-button"
                 onClick={() => setOpen(!open)}
-                style={{transform: height.interpolate(s => `rotate(${s * 180}deg)`)}}
+                style={{transform: angle.interpolate(a => `rotate(${a * 180}deg)`)}}
             >
                 <Picto name={"f-basse"} />
             </animated.div>
