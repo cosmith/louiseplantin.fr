@@ -123,7 +123,7 @@ function getSourceVariant(s, image) {
     return `url("${image.src}${scale}.jpg")`;
 }
 
-const isMobile = new MobileDetect(window.navigator.userAgent).mobile();
+const isMobile = new MobileDetect(window.navigator.userAgent).phone();
 
 function Viewpager() {
     const zoomLevel = useRef(INITIAL_ZOOM);
