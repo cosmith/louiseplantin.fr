@@ -90,8 +90,7 @@ export function Menu({filters, onFilterClick, isMobile}) {
             >
                 <div className="menu-section menu-subtitle">
                     {translations["Facilitation graphique"]}
-                    <br />
-                    &mdash; {translations["Illustration"]}
+                    <br />& {translations["Illustration"]}
                 </div>
 
                 <div className="menu-section menu-contact">
