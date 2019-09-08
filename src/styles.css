@@ -24,6 +24,10 @@ body {
 
 #container {
     height: 100%;
+    margin: 30px;
+
+    -ms-touch-action: none;
+    touch-action: none;
 }
 
 #map {

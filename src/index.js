@@ -139,11 +139,15 @@ function Viewpager() {
 
     const bind = useGesture({
         onDrag: ({vxvy: [vx, vy]}) => {
+            document.body.style.cursor = "url('./icons/carre-fleche.svg'), move";
             mapPosition.current = {
                 x: (vx * MOVE_SPEED) / zoomLevel.current + mapPosition.current.x,
                 y: (vy * MOVE_SPEED) / zoomLevel.current + mapPosition.current.y,
             };
             setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+        },
+        onDragEnd: () => {
+            document.body.style.cursor = "default";
         },
         onPinch: ({previous: [previousDistance, previousAngle], da: [distance, angle]}) => {
             if (!isMobile) {
@@ -201,13 +205,10 @@ function Viewpager() {
         setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
     };
 
+    let moved = false;
+
     return (
-        <div
-            {...bind()}
-            id="container"
-            className="touch-drag touch-zoom"
-            onDoubleClick={handleZoom.bind(null, 1)}
-        >
+        <div {...bind()} id="container" onDoubleClick={handleZoom.bind(null, 1)}>
             <ZoomButtons
                 onHomeClick={() => {
                     zoomLevel.current = INITIAL_ZOOM;
@@ -296,7 +297,17 @@ function Viewpager() {
                                     (x, y, s) => `0 4px ${14 / s}px 0px rgb(208, 208, 208)`
                                 ),
                             }}
-                            onMouseDown={handleZoomToImageIndex.bind(null, i)}
+                            onMouseDown={() => {
+                                moved = false;
+                            }}
+                            onMouseMove={() => {
+                                moved = true;
+                            }}
+                            onMouseUp={() => {
+                                if (!moved) {
+                                    handleZoomToImageIndex(i);
+                                }
+                            }}
                         />
                         <animated.div
                             className="legend"
@@ -322,14 +333,9 @@ function Viewpager() {
     );
 }
 
-function preventDefault(e) {
-    e.preventDefault();
-}
-
-function disableScroll() {
-    document.body.addEventListener("touchmove", preventDefault, {passive: false});
-}
-
-disableScroll();
+// prevent pinch-to-zoom on Chrome / Firefox OSX
+document.getElementById("root").addEventListener("wheel", event => {
+    event.preventDefault();
+});
 
 render(<Viewpager />, document.getElementById("root"));
