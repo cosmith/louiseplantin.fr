@@ -1,3 +1,9 @@
+@font-face {
+    font-family: "San Francisco";
+    font-weight: 400;
+    src: url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff");
+}
+
 * {
     box-sizing: border-box;
 }
@@ -9,8 +15,8 @@ body {
     height: 100%;
     width: 100%;
     user-select: none;
-    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica,
-        ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+    font-family: "San Francisco", -apple-system, BlinkMacSystemFont, avenir next, avenir,
+        helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
     position: fixed;
     overscroll-behavior-y: none;
 }
