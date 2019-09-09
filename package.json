@@ -2,7 +2,7 @@
   "name": "louiseplantin.fr",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://cosmith.github.io/louiseplantin.fr",
+  "homepage": "https://www.louiseplantin.fr",
   "dependencies": {
     "lodash-es": "^4.17.11",
     "mobile-detect": "^1.4.3",
