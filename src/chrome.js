@@ -94,8 +94,12 @@ export function Menu({filters, onFilterClick, isMobile}) {
                 </div>
 
                 <div className="menu-section menu-contact">
-                    <a target="_blank" rel="noopener noreferrer" href="mailto:louiseillu@yahoo.fr">
-                        louiseillu @yahoo.fr
+                    <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="mailto:contact@louiseplantin.fr"
+                    >
+                        contact @louiseplantin.fr
                     </a>
                     <br />
                     06 52 55 41 18
