@@ -1,9 +1,9 @@
 import json
 import os
 
+from PIL import Image
 from tqdm import tqdm
 from unidecode import unidecode
-from PIL import Image
 
 filelist = []
 
@@ -31,7 +31,8 @@ def get_parts(filename):
 
 def save_thumbnails(filepath, category):
     path_no_ext = os.path.splitext(filepath)[0]
-    path = unidecode(path_no_ext).replace("/images/", "/thumbs/").replace(" ", "_")
+    path = unidecode(path_no_ext).replace(
+        "/images/", "/thumbs/").replace(" ", "_")
 
     max_size = 3500 if category == "Facilitation" else 1500
     image = Image.open(filepath)
@@ -57,7 +58,12 @@ if __name__ == "__main__":
                 if filename.startswith("."):
                     continue
 
-                parts = get_parts(filename)
+                try:
+                    parts = get_parts(filename)
+                except ValueError as e:
+                    print(f"Skipping file", e)
+                    continue
+
                 filepath = root + "/" + filename
                 (width, height), src = save_thumbnails(filepath, category)
 
