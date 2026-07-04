@@ -146,6 +146,7 @@ const Item = memo(function Item({
     y,
     show,
     variantSuffix,
+    previousVariantSuffix,
     opacity,
     shadow,
     legendText,
@@ -178,7 +179,12 @@ const Item = memo(function Item({
                 style={{
                     width: `${image.width}px`,
                     height: `${image.height}px`,
-                    backgroundImage: `url("${image.src}${variantSuffix}.jpg")`,
+                    // keep the previous resolution underneath while the new
+                    // one loads, so crossing a zoom threshold never flashes
+                    backgroundImage:
+                        previousVariantSuffix === variantSuffix
+                            ? `url("${image.src}${variantSuffix}.jpg")`
+                            : `url("${image.src}${variantSuffix}.jpg"), url("${image.src}${previousVariantSuffix}.jpg")`,
                     opacity,
                     boxShadow: shadow,
                 }}
@@ -326,6 +332,16 @@ function Viewpager() {
     // (throttled) re-renders from the gesture target values
     const zoom = zoomLevel.current;
     const variantSuffix = getVariantSuffix(zoom);
+    // remember the resolution variant we're transitioning away from so items
+    // can keep it as a fallback background layer while the new file loads
+    const variantHistory = useRef({current: variantSuffix, previous: variantSuffix});
+    if (variantHistory.current.current !== variantSuffix) {
+        variantHistory.current = {
+            current: variantSuffix,
+            previous: variantHistory.current.current,
+        };
+    }
+    const previousVariantSuffix = variantHistory.current.previous;
     const opacity = zoom > HIDE_IMAGES_ZOOM ? 1 : zoom / (HIDE_IMAGES_ZOOM - MIN_ZOOM) - 1;
     const shadow = `0 ${4 / zoom}px ${14 / zoom}px 0px rgb(208, 208, 208)`;
 
@@ -390,6 +406,7 @@ function Viewpager() {
                         y={imagePositions.current[i][1]}
                         show={filters[image.filter]}
                         variantSuffix={variantSuffix}
+                        previousVariantSuffix={previousVariantSuffix}
                         opacity={opacity}
                         shadow={shadow}
                         legendText={getLegendText(image, zoom)}
