@@ -1,6 +1,7 @@
 @font-face {
     font-family: "San Francisco";
     font-weight: 400;
+    font-display: swap;
     src: url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff");
 }
 
@@ -39,6 +40,7 @@ body {
 #map {
     height: 100%;
     pointer-events: none;
+    will-change: transform;
 }
 
 .image {
@@ -51,19 +53,25 @@ body {
     position: absolute;
     will-change: transform;
     pointer-events: none;
+    /* pan/zoom is animated on #map; this only animates on shuffle/filter */
+    transition: transform 0.5s ease;
 }
 
 .image-container .image {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    will-change: width, height;
     cursor: pointer;
     pointer-events: auto;
+    /* opacity only updates at the throttled rate; ease between values */
+    transition: opacity 0.2s ease;
 }
 
 .image-container .legend {
-    margin-top: 12px;
+    position: absolute;
+    left: 0;
+    transform-origin: 0 0;
+    will-change: transform;
     text-rendering: optimizeSpeed;
     font-size: 14px;
     text-transform: uppercase;

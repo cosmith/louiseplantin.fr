@@ -1,11 +1,9 @@
 import {render} from "react-dom";
-import React, {useRef, useState} from "react";
-import {useSprings, animated} from "react-spring";
+import React, {memo, useCallback, useRef, useState} from "react";
+import {useSpring, animated} from "react-spring";
 import {useGesture} from "react-use-gesture";
-import {clamp, random, shuffle} from "lodash-es";
-import MobileDetect from "mobile-detect";
 
-import {intersects} from "./utils";
+import {intersects, clamp, random, shuffle} from "./utils";
 import {ZoomButtons, ArrowButtons, Menu} from "./chrome";
 import "./styles.css";
 import originalImages from "./images.json";
@@ -24,6 +22,10 @@ const MIN_ZOOM = 0.04;
 const HIDE_IMAGES_ZOOM = 0.1;
 const MAX_ZOOM = 1.3;
 const MOVE_SPEED = 20;
+
+// how often the non-animated, per-image styles (thumbnail variant, legend
+// truncation, opacity, shadow) are allowed to update during a gesture
+const DERIVED_UPDATE_INTERVAL = 150;
 
 function generatePositions(images, filters) {
     const positions = [];
@@ -64,35 +66,26 @@ function generatePositions(images, filters) {
 
 const MIDDLE = {x: window.innerWidth / 2, y: window.innerHeight / 2};
 
-function getImagesParams(imagePositions, mapPosition, zoomLevel, filters) {
-    return i => {
-        return {
-            xys: [
-                MIDDLE.x +
-                    (imagePositions.current[i][0] + mapPosition.current.x) * zoomLevel.current,
-                MIDDLE.y +
-                    (imagePositions.current[i][1] + mapPosition.current.y) * zoomLevel.current,
-                zoomLevel.current,
-            ],
-            display: filters[images[i].filter] ? "block" : "none",
-        };
+function throttle(fn, wait) {
+    let last = 0;
+    let timer = null;
+    return () => {
+        const now = Date.now();
+        const remaining = wait - (now - last);
+        if (remaining <= 0) {
+            last = now;
+            fn();
+        } else if (!timer) {
+            timer = setTimeout(() => {
+                timer = null;
+                last = Date.now();
+                fn();
+            }, remaining);
+        }
     };
 }
 
-function LegendSpan({xys, cutoff, text}) {
-    return (
-        <animated.span
-            style={{
-                display: xys.interpolate((x, y, s) => (s > cutoff ? "inline" : "none")),
-            }}
-        >
-            {" | "}
-            {text}
-        </animated.span>
-    );
-}
-
-function showImage(x, y, s, image, mapPosition) {
+function showImage(x, y, s, image) {
     const displayMargin = 50;
     if (x > window.innerWidth + displayMargin) {
         return false;
@@ -109,21 +102,114 @@ function showImage(x, y, s, image, mapPosition) {
     return true;
 }
 
-function getSourceVariant(s, image) {
-    let scale;
+function getVariantSuffix(s) {
     if (s > 1) {
-        scale = "@4x";
+        return "@4x";
     } else if (s > 0.4) {
-        scale = "@3x";
+        return "@3x";
     } else if (s > 0.1) {
-        scale = "@2x";
-    } else {
-        scale = "@1x";
+        return "@2x";
     }
-    return `url("${image.src}${scale}.jpg")`;
+    return "@1x";
 }
 
-const isMobile = new MobileDetect(window.navigator.userAgent).mobile();
+function getLegendText(image, zoom) {
+    const parts = [image.client];
+    if (zoom > 0.3) {
+        parts.push(image.year);
+    }
+    if (zoom > 0.5) {
+        parts.push(image.category);
+    }
+    if (zoom > 0.7) {
+        parts.push(image.project);
+    }
+    if (zoom > 0.9) {
+        parts.push(image.description);
+    }
+    return parts.join(" | ");
+}
+
+const isMobile =
+    /Mobi|Android|iPhone|iPad|iPod/i.test(window.navigator.userAgent) ||
+    // iPadOS reports a desktop Macintosh user agent but has a touch screen
+    (/Macintosh/.test(window.navigator.userAgent) && window.navigator.maxTouchPoints > 1);
+
+// A single image on the map. Everything animated per frame is driven by the
+// shared map spring (xys); the other style props only change on the throttled
+// derived-state updates, and React.memo skips the ones whose props are stable.
+const Item = memo(function Item({
+    xys,
+    image,
+    index,
+    x,
+    y,
+    show,
+    variantSuffix,
+    opacity,
+    shadow,
+    legendText,
+    legendWidth,
+    onSelect,
+}) {
+    const moved = useRef(false);
+
+    return (
+        <animated.div
+            className="image-container"
+            style={{
+                display: show
+                    ? xys.interpolate((mx, my, s) =>
+                          showImage(
+                              MIDDLE.x + (x + mx) * s,
+                              MIDDLE.y + (y + my) * s,
+                              s,
+                              image
+                          )
+                              ? "block"
+                              : "none"
+                      )
+                    : "none",
+                transform: `translate3d(${x}px,${y}px,0)`,
+            }}
+        >
+            <div
+                className="image"
+                style={{
+                    width: `${image.width}px`,
+                    height: `${image.height}px`,
+                    backgroundImage: `url("${image.src}${variantSuffix}.jpg")`,
+                    opacity,
+                    boxShadow: shadow,
+                }}
+                onMouseDown={() => {
+                    moved.current = false;
+                }}
+                onMouseMove={() => {
+                    moved.current = true;
+                }}
+                onMouseUp={() => {
+                    if (!moved.current) {
+                        onSelect(index);
+                    }
+                }}
+            />
+            <animated.div
+                className="legend"
+                style={{
+                    top: `${image.height}px`,
+                    width: `${legendWidth}px`,
+                    // counter-scale so the text keeps a constant on-screen size
+                    transform: xys.interpolate(
+                        (mx, my, s) => `scale(${1 / s}) translateY(12px)`
+                    ),
+                }}
+            >
+                {legendText}
+            </animated.div>
+        </animated.div>
+    );
+});
 
 function Viewpager() {
     const zoomLevel = useRef(INITIAL_ZOOM);
@@ -131,11 +217,36 @@ function Viewpager() {
     const [filters, setFilters] = useState(INITIAL_FILTERS);
     const imagePositions = useRef(generatePositions(images, filters));
     const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+    const [, setDerivedVersion] = useState(0);
+    const derivedSignature = useRef("");
 
-    const [propsImages, setImages] = useSprings(
-        images.length,
-        getImagesParams(imagePositions, mapPosition, zoomLevel, filters)
-    );
+    // the whole map pans and zooms through this single spring; individual
+    // images never animate on their own during a gesture. The exact derived
+    // styles (legend truncation, shadow) are applied once the spring rests.
+    const [mapProps, setMap] = useSpring(() => ({
+        xys: [mapPosition.current.x, mapPosition.current.y, zoomLevel.current],
+        onRest: () => setDerivedVersion(version => version + 1),
+    }));
+
+    // mid-gesture, only re-render the images when something visible at 60fps
+    // actually changed: the thumbnail resolution variant or the fade opacity
+    const refreshDerived = useRef(
+        throttle(() => {
+            const zoom = zoomLevel.current;
+            const opacity =
+                zoom > HIDE_IMAGES_ZOOM ? 1 : zoom / (HIDE_IMAGES_ZOOM - MIN_ZOOM) - 1;
+            const signature = `${getVariantSuffix(zoom)}|${opacity.toFixed(2)}`;
+            if (signature !== derivedSignature.current) {
+                derivedSignature.current = signature;
+                setDerivedVersion(version => version + 1);
+            }
+        }, DERIVED_UPDATE_INTERVAL)
+    ).current;
+
+    const updateMap = () => {
+        setMap({xys: [mapPosition.current.x, mapPosition.current.y, zoomLevel.current]});
+        refreshDerived();
+    };
 
     const bind = useGesture({
         onDrag: ({vxvy: [vx, vy]}) => {
@@ -144,18 +255,18 @@ function Viewpager() {
                 x: (vx * MOVE_SPEED) / zoomLevel.current + mapPosition.current.x,
                 y: (vy * MOVE_SPEED) / zoomLevel.current + mapPosition.current.y,
             };
-            setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+            updateMap();
         },
         onDragEnd: () => {
             document.body.style.cursor = "default";
         },
-        onPinch: ({previous: [previousDistance, previousAngle], da: [distance, angle]}) => {
+        onPinch: ({previous: [previousDistance], da: [distance]}) => {
             if (!isMobile) {
                 return;
             }
             const zoomSpeed = Math.pow(distance / previousDistance, 2);
             zoomLevel.current = clamp(zoomLevel.current * zoomSpeed, MIN_ZOOM, MAX_ZOOM);
-            setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+            updateMap();
         },
         onWheel: ({delta: [xDelta, yDelta]}) => {
             if (isMobile) {
@@ -166,7 +277,7 @@ function Viewpager() {
             const multiplier = 1 - (yDelta * (MAX_ZOOM - MIN_ZOOM)) / WIDTH;
 
             zoomLevel.current = clamp(zoomLevel.current * multiplier, MIN_ZOOM, MAX_ZOOM);
-            setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+            updateMap();
         },
     });
 
@@ -178,34 +289,45 @@ function Viewpager() {
             MIN_ZOOM,
             MAX_ZOOM
         );
-        setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+        updateMap();
     };
 
-    const handleZoomToImageIndex = index => {
-        const imagePos = imagePositions.current[index];
-        const image = images[index];
-        setSelectedImageIndex(index);
+    const handleZoomToImageIndex = useCallback(
+        index => {
+            const imagePos = imagePositions.current[index];
+            const image = images[index];
+            setSelectedImageIndex(index);
 
-        if (image.width > image.height) {
-            zoomLevel.current = Math.max(
-                window.innerWidth / (image.width - 10),
-                window.innerHeight / (image.height - 10)
-            );
-        } else {
-            zoomLevel.current = Math.min(
-                window.innerWidth / (image.width - 10),
-                window.innerHeight / (image.height - 10)
-            );
-        }
+            if (image.width > image.height) {
+                zoomLevel.current = Math.max(
+                    window.innerWidth / (image.width - 10),
+                    window.innerHeight / (image.height - 10)
+                );
+            } else {
+                zoomLevel.current = Math.min(
+                    window.innerWidth / (image.width - 10),
+                    window.innerHeight / (image.height - 10)
+                );
+            }
 
-        mapPosition.current = {
-            x: -imagePos[0] - image.width / 2,
-            y: -imagePos[1] - image.height / 2,
-        };
-        setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
-    };
+            mapPosition.current = {
+                x: -imagePos[0] - image.width / 2,
+                y: -imagePos[1] - image.height / 2,
+            };
+            setMap({
+                xys: [mapPosition.current.x, mapPosition.current.y, zoomLevel.current],
+            });
+            refreshDerived();
+        },
+        [setMap, refreshDerived]
+    );
 
-    let moved = false;
+    // per-image styles that don't need to change every frame; recomputed on
+    // (throttled) re-renders from the gesture target values
+    const zoom = zoomLevel.current;
+    const variantSuffix = getVariantSuffix(zoom);
+    const opacity = zoom > HIDE_IMAGES_ZOOM ? 1 : zoom / (HIDE_IMAGES_ZOOM - MIN_ZOOM) - 1;
+    const shadow = `0 ${4 / zoom}px ${14 / zoom}px 0px rgb(208, 208, 208)`;
 
     return (
         <div {...bind()} id="container" onDoubleClick={handleZoom.bind(null, 1)}>
@@ -215,12 +337,12 @@ function Viewpager() {
                     mapPosition.current = INITIAL_MAP_POSITION;
                     setFilters(INITIAL_FILTERS);
                     imagePositions.current = generatePositions(images, INITIAL_FILTERS);
-                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+                    updateMap();
                 }}
                 onZoomClick={handleZoom}
                 onShuffleClick={() => {
                     imagePositions.current = generatePositions(images, filters);
-                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, filters));
+                    updateMap();
                 }}
             />
             <ArrowButtons
@@ -243,90 +365,37 @@ function Viewpager() {
                     setSelectedImageIndex(0);
                     zoomLevel.current = INITIAL_ZOOM;
                     imagePositions.current = generatePositions(images, newFilters);
-                    setImages(getImagesParams(imagePositions, mapPosition, zoomLevel, newFilters));
+                    updateMap();
                 }}
                 isMobile={isMobile}
             />
-            {/*<animated.div className="debug-info">
-                {propsImages.map(({xys, display}, i) => (
-                    <animated.div
-                        style={{
-                            padding: "5px",
-                            backgroundColor: xys.interpolate((x, y, s) =>
-                                showImage(x, y, s, images[i], mapPosition.current) ? "blue" : "red"
-                            ),
-                            flex: 1,
-                        }}
-                    >
-                        {i}
-                    </animated.div>
-                ))}
-            </animated.div>*/}
-            <animated.div id="map">
-                {propsImages.map(({xys, display}, i) => (
-                    <animated.div
-                        className="image-container"
+            <animated.div
+                id="map"
+                style={{
+                    transform: mapProps.xys.interpolate(
+                        (x, y, s) =>
+                            `translate3d(${MIDDLE.x + x * s}px,${MIDDLE.y +
+                                y * s}px,0) scale(${s})`
+                    ),
+                    transformOrigin: "0 0",
+                }}
+            >
+                {images.map((image, i) => (
+                    <Item
                         key={i}
-                        style={{
-                            display: xys.interpolate((x, y, s) =>
-                                showImage(x, y, s, images[i], mapPosition.current)
-                                    ? display.value
-                                    : "none"
-                            ),
-                            transform: xys.interpolate(
-                                (x, y, s) => `translate3d(${x}px,${y}px,0)`
-                            ),
-                        }}
-                    >
-                        <animated.div
-                            className="image"
-                            style={{
-                                width: `${images[i].width}px`,
-                                height: `${images[i].height}px`,
-                                transform: xys.interpolate((x, y, s) => `scale(${s})`),
-                                transformOrigin: "0 0",
-                                backgroundImage: xys.interpolate((x, y, s) =>
-                                    getSourceVariant(s, images[i])
-                                ),
-                                opacity: xys.interpolate((x, y, s) =>
-                                    s > HIDE_IMAGES_ZOOM
-                                        ? 1
-                                        : s / (HIDE_IMAGES_ZOOM - MIN_ZOOM) - 1
-                                ),
-                                boxShadow: xys.interpolate(
-                                    (x, y, s) => `0 4px ${14 / s}px 0px rgb(208, 208, 208)`
-                                ),
-                            }}
-                            onMouseDown={() => {
-                                moved = false;
-                            }}
-                            onMouseMove={() => {
-                                moved = true;
-                            }}
-                            onMouseUp={() => {
-                                if (!moved) {
-                                    handleZoomToImageIndex(i);
-                                }
-                            }}
-                        />
-                        <animated.div
-                            className="legend"
-                            style={{
-                                position: "absolute",
-                                top: xys.interpolate((x, y, s) => `${images[i].height * s}px`),
-                                width: xys.interpolate(
-                                    (x, y, s) =>
-                                        `${s > HIDE_IMAGES_ZOOM ? images[i].width * s : 1000}px`
-                                ),
-                            }}
-                        >
-                            {images[i].client}
-                            <LegendSpan xys={xys} cutoff={0.3} text={images[i].year} />
-                            <LegendSpan xys={xys} cutoff={0.5} text={images[i].category} />
-                            <LegendSpan xys={xys} cutoff={0.7} text={images[i].project} />
-                            <LegendSpan xys={xys} cutoff={0.9} text={images[i].description} />
-                        </animated.div>
-                    </animated.div>
+                        xys={mapProps.xys}
+                        image={image}
+                        index={i}
+                        x={imagePositions.current[i][0]}
+                        y={imagePositions.current[i][1]}
+                        show={filters[image.filter]}
+                        variantSuffix={variantSuffix}
+                        opacity={opacity}
+                        shadow={shadow}
+                        legendText={getLegendText(image, zoom)}
+                        legendWidth={zoom > HIDE_IMAGES_ZOOM ? image.width * zoom : 1000}
+                        onSelect={handleZoomToImageIndex}
+                    />
                 ))}
             </animated.div>
         </div>
