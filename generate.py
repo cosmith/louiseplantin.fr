@@ -5,6 +5,9 @@ from PIL import Image
 from tqdm import tqdm
 from unidecode import unidecode
 
+ORIGINALS_DIR = "./originals/"
+THUMBS_DIR = "./public/thumbs/"
+
 filelist = []
 
 
@@ -30,9 +33,9 @@ def get_parts(filename):
 
 
 def save_thumbnails(filepath, category):
-    path_no_ext = os.path.splitext(filepath)[0]
-    path = unidecode(path_no_ext).replace(
-        "/images/", "/thumbs/").replace(" ", "_")
+    relpath = os.path.relpath(os.path.splitext(filepath)[0], ORIGINALS_DIR)
+    path = os.path.join(THUMBS_DIR, unidecode(relpath).replace(" ", "_"))
+    os.makedirs(os.path.dirname(path), exist_ok=True)
 
     max_size = 3500 if category == "Facilitation" else 1500
     image = Image.open(filepath)
@@ -42,14 +45,20 @@ def save_thumbnails(filepath, category):
         image = Image.open(filepath)
         factor = max_size / original_image_size * ratio
         new_size = (round(image.width * factor), round(image.height * factor))
-        image = image.resize(new_size, Image.ANTIALIAS)
-        image.convert("RGB").save(f"{path}@{number}x.jpg", "jpeg")
+        image = image.resize(new_size, Image.LANCZOS)
+        image.convert("RGB").save(
+            f"{path}@{number}x.jpg",
+            "jpeg",
+            quality=75,
+            optimize=True,
+            progressive=True,
+        )
 
     return image.size, path
 
 
 if __name__ == "__main__":
-    for root, dirs, files in os.walk("./public/images/"):
+    for root, dirs, files in os.walk(ORIGINALS_DIR):
         if files:
             category = root.split("/")[-1]
             print(f"Processing {category}...")
@@ -69,7 +78,7 @@ if __name__ == "__main__":
 
                 filelist.append(
                     dict(
-                        src=f"./thumbs/{src.split('/thumbs/')[1]}",
+                        src=f"./thumbs/{os.path.relpath(src, THUMBS_DIR)}",
                         width=width,
                         height=height,
                         category=category,

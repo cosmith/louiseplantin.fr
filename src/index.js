@@ -2,10 +2,7 @@ import {render} from "react-dom";
 import React, {useRef, useState} from "react";
 import {useSprings, animated} from "react-spring";
 import {useGesture} from "react-use-gesture";
-import {clamp, random, shuffle} from "lodash-es";
-import MobileDetect from "mobile-detect";
-
-import {intersects} from "./utils";
+import {intersects, clamp, random, shuffle} from "./utils";
 import {ZoomButtons, ArrowButtons, Menu} from "./chrome";
 import "./styles.css";
 import originalImages from "./images.json";
@@ -123,7 +120,10 @@ function getSourceVariant(s, image) {
     return `url("${image.src}${scale}.jpg")`;
 }
 
-const isMobile = new MobileDetect(window.navigator.userAgent).mobile();
+const isMobile =
+    /Mobi|Android|iPhone|iPad|iPod/i.test(window.navigator.userAgent) ||
+    // iPadOS reports a desktop Macintosh user agent but has a touch screen
+    (/Macintosh/.test(window.navigator.userAgent) && window.navigator.maxTouchPoints > 1);
 
 function Viewpager() {
     const zoomLevel = useRef(INITIAL_ZOOM);
