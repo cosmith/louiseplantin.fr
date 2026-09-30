@@ -48,30 +48,6 @@
         "number": 0
     },
     {
-        "src": "./thumbs/Jeunesse/Police_nationale|2019|Prevention_inondations|Sacha_&_Juliette",
-        "width": 1500,
-        "height": 977,
-        "category": "Jeunesse",
-        "filter": "Jeunesse",
-        "client": "Police nationale",
-        "year": "2019",
-        "project": "Pr\u00e9vention inondations",
-        "description": "Sacha & Juliette",
-        "number": 0
-    },
-    {
-        "src": "./thumbs/Jeunesse/Police_nationale|2018|Magazine_Liaisons|Sacha_&_Juliette|2",
-        "width": 1500,
-        "height": 1071,
-        "category": "Jeunesse",
-        "filter": "Jeunesse",
-        "client": "Police nationale",
-        "year": "2018",
-        "project": "Magazine Liaisons",
-        "description": "Sacha & Juliette",
-        "number": "2"
-    },
-    {
         "src": "./thumbs/Jeunesse/Bohmy|2019|Site_internet|Illustration_pour_presenter_l'extension_de_manteau_Bohmy",
         "width": 1500,
         "height": 803,
@@ -142,18 +118,6 @@
         "project": "Fanzine",
         "description": "Ze\u0301lie & Ferdinand",
         "number": "1"
-    },
-    {
-        "src": "./thumbs/Jeunesse/Police_nationale|2018|Magazine_Liaisons|Sacha_&_Juliette|10",
-        "width": 1500,
-        "height": 1071,
-        "category": "Jeunesse",
-        "filter": "Jeunesse",
-        "client": "Police nationale",
-        "year": "2018",
-        "project": "Magazine Liaisons",
-        "description": "Sacha & Juliette",
-        "number": "10"
     },
     {
         "src": "./thumbs/Jeunesse/Les_Boardies|2017|Tapis_de_jeu|Worderland",
@@ -300,18 +264,6 @@
         "number": "2"
     },
     {
-        "src": "./thumbs/Corporate/Vinci|2017|My_Vinci_Start-Up|Infographie_presentant_le_programme_d'intraprenariat_de_Vinci",
-        "width": 1500,
-        "height": 840,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Vinci",
-        "year": "2017",
-        "project": "My Vinci Start-Up",
-        "description": "Infographie pre\u0301sentant le programme d'intraprenariat de Vinci",
-        "number": 0
-    },
-    {
         "src": "./thumbs/Corporate/Mairie_de_Saint-Denis|2018|Fete_des_Tulipes|Illustration",
         "width": 1500,
         "height": 1000,
@@ -384,18 +336,6 @@
         "number": 0
     },
     {
-        "src": "./thumbs/Corporate/Vinci|2021|Corporate|Illustration_de_l'ambition_environnementale_du_groupe",
-        "width": 1224,
-        "height": 1500,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Vinci",
-        "year": "2021",
-        "project": "Corporate",
-        "description": "Illustration de l'ambition environnementale du groupe",
-        "number": 0
-    },
-    {
         "src": "./thumbs/Corporate/SNCF|2017|Papier_recycle|Webserie_de_7_episodes_de_bande_dessinee_pour_mailing_hebdomadaire_de_communication_interne",
         "width": 1500,
         "height": 1422,
@@ -405,18 +345,6 @@
         "year": "2017",
         "project": "Papier recycle\u0301",
         "description": "Webse\u0301rie de 7 e\u0301pisodes de bande dessine\u0301e pour mailing hebdomadaire de communication interne",
-        "number": 0
-    },
-    {
-        "src": "./thumbs/Corporate/Eurovia|2019|Accueil_Environnement|Livret_de_presentation_des_bonnes_pratiques_en_matiere_d'environnement_sur_les_chantiers_Eurovia",
-        "width": 1500,
-        "height": 1355,
-        "category": "Corporate",
-        "filter": "Corporate",
-        "client": "Eurovia",
-        "year": "2019",
-        "project": "Accueil Environnement",
-        "description": "Livret de pr\u00e9sentation des bonnes pratiques en mati\u00e8re d\u2019environnement sur les chantiers Eurovia",
         "number": 0
     },
     {
@@ -537,18 +465,6 @@
         "year": "2021",
         "project": "Stress",
         "description": "Podcast",
-        "number": 0
-    },
-    {
-        "src": "./thumbs/Facilitation/Eurovia|2018|Mur_e-cube|Peinture_d'une_fresque_murale_dans_la_salle_de_repos_des_locaux_de_l'equipe_e-cube",
-        "width": 3500,
-        "height": 2474,
-        "category": "Facilitation",
-        "filter": "Facilitation",
-        "client": "Eurovia",
-        "year": "2018",
-        "project": "Mur e-cube",
-        "description": "Peinture d\u2019une fresque murale dans la salle de repos des locaux de l\u2019\u00e9quipe e-cube",
         "number": 0
     },
     {
